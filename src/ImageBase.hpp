@@ -111,13 +111,13 @@ class ImageBase
 				_IMG->set_byte_unsafe(i,VAL); 
 		}
 
-		void copy_out(char * dst) { _IMG->copy_out(dst); }
+		void CopyOut(char * dst) { _IMG->CopyOut(dst); }
 
-		void copy_in (char * src) { _IMG->copy_in (src); }
+		void CopyIn (char * src) { _IMG->CopyIn (src); }
 
-		void cu_copy_out(char * dst) { _IMG->cu_copy_out(dst); }
+		void cuCopyOut(char * dst) { _IMG->cuCopyOut(dst); }
 
-		void cu_copy_in (char * src) { _IMG->cu_copy_in (src); }
+		void cuCopyIn (char * src) { _IMG->cuCopyIn (src); }
 
 		void sync (bool up) { _IMG->sync(up); }
 

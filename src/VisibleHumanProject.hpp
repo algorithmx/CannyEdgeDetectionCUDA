@@ -42,7 +42,7 @@ class RGB_GZ_VHP : public ImageBase<3,M>
                 tot[p] = F.get_total(p);
 
             char *A = _mem_alloc_char<char>(F.get_IMAGE_SIZE());
-            F.copy_out(A);
+            F.CopyOut(A);
 
             ImageBase<3,M>::_IMG->execute_kernel(
                 DST, ExecutionPolicy(),
@@ -54,11 +54,10 @@ class RGB_GZ_VHP : public ImageBase<3,M>
             _mem_free_char<int>(tot); 
         }
 
-
         void apply_filter_CPU(FilterBase<3> &F) {
             char *DST = _mem_alloc_char<char>(ImageBase<3,M>::get_IMAGE_SIZE());
             apply_filter_CPU(F, DST);
-            ImageBase<3,M>::copy_in(DST);
+            ImageBase<3,M>::CopyIn(DST);
             ImageBase<3,M>::sync(true); // upload
             _mem_free_char<char>(DST); 
         }
@@ -74,7 +73,7 @@ class RGB_GZ_VHP : public ImageBase<3,M>
             _cu_mem_copy<int>(tot, cu_tot, 3, cudaMemcpyHostToDevice);
 
             char *A = _mem_alloc_char<char>(F_IMG_SIZE);
-            F.copy_out(A) ;
+            F.CopyOut(A) ;
             char *cu_A = _cu_mem_alloc_char<char>(F_IMG_SIZE);
             _cu_mem_copy<char>(A, cu_A, F_IMG_SIZE, cudaMemcpyHostToDevice);
 
@@ -94,11 +93,10 @@ class RGB_GZ_VHP : public ImageBase<3,M>
         void apply_filter_GPU(FilterBase<3> &F, const ExecutionPolicy & ExPol) {
             char *DST = _cu_mem_alloc_char<char>(ImageBase<3,M>::get_IMAGE_SIZE());
             apply_filter_GPU<INTERPRETE_AS>(F, DST, ExPol);
-            ImageBase<3,M>::_IMG->cu_copy_in(DST);
+            ImageBase<3,M>::_IMG->cuCopyIn(DST);
             ImageBase<3,M>::sync(false); // download to CPU memory
             _cu_mem_free_char<char>(DST); 
         }
-
 
         void merge_with_CPU(RGB_GZ_VHP<M> &RGB1, char (*rgb_op)(char, char))
         {
@@ -112,7 +110,7 @@ class RGB_GZ_VHP : public ImageBase<3,M>
             }
 
             char *DST = _mem_alloc_char<char>(ImageBase<3,M>::get_IMAGE_SIZE());
-            RGB1.copy_out(DST); // assuming synchronized
+            RGB1.CopyOut(DST); // assuming synchronized
 
             ImageBase<3,M>::_IMG->execute_kernel(
                 DST, ExecutionPolicy(),
@@ -125,80 +123,39 @@ class RGB_GZ_VHP : public ImageBase<3,M>
             _mem_free_char<char>(DST); 
         }
 
-        void merge_with_GPU(RGB_GZ_VHP<M> & RGB1, int mode_op, const ExecutionPolicy & ExPol)
+        void double_threshold_GPU(
+            const ExecutionPolicy & ExPol, 
+            unsigned int thrL = 8u,
+            unsigned int thrH = 16u
+        )
         {
-            if (
-                (RGB1.get_IMAGE_SIZE() != ImageBase<3,M>::get_IMAGE_SIZE()) ||
-                (RGB1.get_H() != ImageBase<3,M>::get_H()) ||
-                (RGB1.get_W() != ImageBase<3,M>::get_W())
-            )
-            {
-                return;
-            }
+            RGB_GZ_VHP<M> dummy(ImageBase<3,M>::_H, ImageBase<3,M>::_W);
+            merge_with_GPU(dummy, 3, ExPol, 64u, thrL, thrH);
+        }
 
-            char *cu_TMP = _cu_mem_alloc_char<char>(ImageBase<3,M>::get_IMAGE_SIZE());
+        void rescaling_GPU(
+            const ExecutionPolicy & ExPol, 
+            unsigned int cutoff = 64u,
+        )
+        {
+            RGB_GZ_VHP<M> dummy(ImageBase<3,M>::_H, ImageBase<3,M>::_W);
+            merge_with_GPU(dummy, 4, ExPol, cutoff, 8u, 16u);
+        }
 
-            if (mode_op==0)
-            {
-                RGB1.cu_copy_out(cu_TMP); // assuming synchronized
-                ImageBase<3,M>::_IMG->execute_kernel(
-                    cu_TMP, ExPol,
-                    &inplace_merge_pixelwise_GPU_all_channels_amp, // sqrt(Ix^2 + Iy^2)
-                    3, ImageBase<3,M>::get_H(), ImageBase<3,M>::get_W()
-                );
-            }
-            else
-            if (mode_op==1)
-            {
-                RGB1.cu_copy_out(cu_TMP); // assuming synchronized
-                ImageBase<3,M>::_IMG->execute_kernel(
-                    cu_TMP, ExPol,
-                    &inplace_merge_pixelwise_GPU_all_channels_dir, // atan2(Ix, Iy)
-                    3, ImageBase<3,M>::get_H(), ImageBase<3,M>::get_W()
-                );
-            }
-            else
-            if (mode_op==2)
-            {
-                RGB1.cu_copy_out(cu_TMP); // assuming synchronized
-                ImageBase<3,M>::_IMG->execute_kernel(
-                    cu_TMP, ExPol,
-                    &inplace_merge_pixelwise_GPU_all_channels_non_maximal_suppression, // non_maximal_suppression
-                    3, ImageBase<3,M>::get_H(), ImageBase<3,M>::get_W() );
-            }
-            else 
-            if (mode_op==3) 
-            {
-                ImageBase<3,M>::cu_copy_out(cu_TMP); // assuming synchronized
-                ImageBase<3,M>::_IMG->execute_kernel(
-                    cu_TMP, ExPol,
-                    &pixelwise_GPU_all_channels_Hysteresis_Thresholding, // Hysteresis_Thresholding
-                    3, 
-                    (unsigned char)8u, (unsigned char)16u, 
-                    (unsigned char)8u, (unsigned char)16u, 
-                    (unsigned char)8u, (unsigned char)16u, 
-                    ImageBase<3,M>::get_H(), ImageBase<3,M>::get_W()
-                );
-            }
-            else
-            if (mode_op==4) 
-            {
-                // RGB1.cu_copy_out(cu_TMP); // cu_TMP is a dummy
-                ImageBase<3,M>::_IMG->execute_kernel(
-                    cu_TMP, ExPol,
-                    &inplace_pixelwise_GPU_all_channels_rescale, // rescale
-                    3, 
-                    (unsigned char)2u, (unsigned char)64u, 
-                    (unsigned char)2u, (unsigned char)64u, 
-                    (unsigned char)2u, (unsigned char)64u, 
-                    ImageBase<3,M>::get_H(), ImageBase<3,M>::get_W()
-                );
-            }
+        void calculate_gradient_direction_GPU(
+            RGB_GZ_VHP<M> & Iy,
+            const ExecutionPolicy & ExPol
+        )
+        {
+            merge_with_GPU(Iy, 2, ExPol, 64u, 8u, 16u);
+        }
 
-            // no need to copy-in, kernel operation is in-place
-            cudaDeviceSynchronize();
-            ImageBase<3,M>::sync(false); // download to CPU memory
-            _cu_mem_free_char<char>(cu_TMP); 
+        void calculate_gradient_amplitude_GPU(
+            RGB_GZ_VHP<M> & Iy,
+            const ExecutionPolicy & ExPol
+        )
+        {
+            merge_with_GPU(Iy, 1, ExPol, 64u, 8u, 16u);
         }
 
 
@@ -239,7 +196,7 @@ class RGB_GZ_VHP : public ImageBase<3,M>
                 return ;
             }
             ImageBase<3,M>::_lock(); 
-            ImageBase<3,M>::_IMG->copy_in(LOCAL_MEM); 
+            ImageBase<3,M>::_IMG->CopyIn(LOCAL_MEM); 
             ImageBase<3,M>::_IMG->sync(true); 
             ImageBase<3,M>::_unlock();
             ImageBase<3,M>::__content_loaded = true ;
@@ -247,6 +204,88 @@ class RGB_GZ_VHP : public ImageBase<3,M>
             auto Tf = timing(T0, "    Timing : RGB_VHP::_load() ");
         }
 
+        void merge_with_GPU(
+            RGB_GZ_VHP<M> & RGB1, 
+            int mode_op, 
+            const ExecutionPolicy & ExPol, 
+            unsigned int cutoff = 64u,
+            unsigned int thrL = 8u,
+            unsigned int thrH = 16u
+        )
+        {
+            if (
+                (RGB1.get_IMAGE_SIZE() != ImageBase<3,M>::get_IMAGE_SIZE()) ||
+                (RGB1.get_H() != ImageBase<3,M>::get_H()) ||
+                (RGB1.get_W() != ImageBase<3,M>::get_W())
+            )
+            {
+                return;
+            }
+
+            char *cu_TMP = _cu_mem_alloc_char<char>(ImageBase<3,M>::get_IMAGE_SIZE());
+
+            if (mode_op==0)
+            {
+                RGB1.cuCopyOut(cu_TMP); // assuming synchronized
+                ImageBase<3,M>::_IMG->execute_kernel(
+                    cu_TMP, ExPol,
+                    &inplace_merge_pixelwise_GPU_all_channels_amp, // sqrt(Ix^2 + Iy^2)
+                    3, ImageBase<3,M>::get_H(), ImageBase<3,M>::get_W()
+                );
+            }
+            else
+            if (mode_op==1)
+            {
+                RGB1.cuCopyOut(cu_TMP); // assuming synchronized
+                ImageBase<3,M>::_IMG->execute_kernel(
+                    cu_TMP, ExPol,
+                    &inplace_merge_pixelwise_GPU_all_channels_dir, // atan2(Ix, Iy)
+                    3, ImageBase<3,M>::get_H(), ImageBase<3,M>::get_W()
+                );
+            }
+            else
+            if (mode_op==2)
+            {
+                RGB1.cuCopyOut(cu_TMP); // assuming synchronized
+                ImageBase<3,M>::_IMG->execute_kernel(
+                    cu_TMP, ExPol,
+                    &inplace_merge_pixelwise_GPU_all_channels_non_maximal_suppression, // non_maximal_suppression
+                    3, ImageBase<3,M>::get_H(), ImageBase<3,M>::get_W() );
+            }
+            else 
+            if (mode_op==3) 
+            {
+                ImageBase<3,M>::cuCopyOut(cu_TMP); // assuming synchronized
+                ImageBase<3,M>::_IMG->execute_kernel(
+                    cu_TMP, ExPol,
+                    &pixelwise_GPU_all_channels_Hysteresis_Thresholding, // Hysteresis_Thresholding
+                    3, 
+                    (unsigned char)thrL, (unsigned char)thrH, 
+                    (unsigned char)thrL, (unsigned char)thrH, 
+                    (unsigned char)thrL, (unsigned char)thrH, 
+                    ImageBase<3,M>::get_H(), ImageBase<3,M>::get_W()
+                );
+            }
+            else
+            if (mode_op==4) 
+            {
+                // RGB1.cuCopyOut(cu_TMP); // cu_TMP is a dummy
+                ImageBase<3,M>::_IMG->execute_kernel(
+                    cu_TMP, ExPol,
+                    &inplace_pixelwise_GPU_all_channels_rescale, // rescale
+                    3, 
+                    (unsigned char)2u, (unsigned char)cutoff, 
+                    (unsigned char)2u, (unsigned char)cutoff, 
+                    (unsigned char)2u, (unsigned char)cutoff,
+                    ImageBase<3,M>::get_H(), ImageBase<3,M>::get_W()
+                );
+            }
+
+            // no need to copy-in, kernel operation is in-place
+            cudaDeviceSynchronize();
+            ImageBase<3,M>::sync(false); // download to CPU memory
+            _cu_mem_free_char<char>(cu_TMP); 
+        }
 };
 
 
@@ -297,10 +336,10 @@ class CT_VHP : public ImageBase<1,M>
                     // claims 16-bit image file but only half of the pixel is used
 
                 ImageBase<1,M>::_lock(); 
-                ImageBase<1,M>::copy_in(LOCAL_MEM); 
+                ImageBase<1,M>::CopyIn(LOCAL_MEM); 
                 ImageBase<1,M>::sync(true); 
                 if (header_size>0) 
-                    ImageBase<1,M>::_HEADER->copy_in(LOCAL_HEADER); 
+                    ImageBase<1,M>::_HEADER->CopyIn(LOCAL_HEADER); 
                 ImageBase<1,M>::_unlock();
                 ImageBase<1,M>::__content_loaded = true ;
 

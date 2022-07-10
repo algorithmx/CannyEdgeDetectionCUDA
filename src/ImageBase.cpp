@@ -68,7 +68,7 @@ bool ImageBase<_NCH,M>::compare_to(ImageBase<_NCH1,M1> &Img)
 
 	char *TMP = _mem_alloc_char<char>(Img.get_IMAGE_SIZE());
 	Img.sync(false); // download
-	Img.copy_out(TMP);
+	Img.CopyOut(TMP);
 	for (int p=0; p<_SIZE_IMG; p++)
 	{
 		if (_IMG->get_byte_unsafe(p) != TMP[p])
@@ -91,14 +91,14 @@ void ImageBase<_NCH,M>::convert_from_mono(ImageBase<1,MX> & MonoImg, int to_chan
 	assert ((MonoImg.get_H()==get_H() && MonoImg.get_W()==get_W())) ;
 
 	char *A1 = _mem_alloc_char<char>(MonoImg.get_IMAGE_SIZE());
-	MonoImg.copy_out(A1);
+	MonoImg.CopyOut(A1);
 	char *AN = _mem_alloc_char<char>(get_IMAGE_SIZE());
 
 	for (int p=0; p<MonoImg.get_IMAGE_SIZE(); p++)
 		AN[p*_NCH+to_channel]=A1[p];
 
 	_lock(); 
-	copy_in(AN); 
+	CopyIn(AN); 
 	sync(true);
 	_unlock();
 	_mem_free_char<char>(A1); 
@@ -113,7 +113,7 @@ void ImageBase<_NCH,M>::convert_from_mono_to_all_channels(ImageBase<1,MX> & Mono
 	assert ((MonoImg.get_H()==get_H() && MonoImg.get_W()==get_W())) ;
 
 	char *A1 = _mem_alloc_char<char>(MonoImg.get_IMAGE_SIZE());
-	MonoImg.copy_out(A1);
+	MonoImg.CopyOut(A1);
 	char *AN = _mem_alloc_char<char>(get_IMAGE_SIZE());
 	
 	for (int to_channel=0; to_channel<_NCH; to_channel++)
@@ -121,7 +121,7 @@ void ImageBase<_NCH,M>::convert_from_mono_to_all_channels(ImageBase<1,MX> & Mono
 			AN[p*_NCH+to_channel]=A1[p];
 
 	_lock(); 
-	copy_in(AN); 
+	CopyIn(AN); 
 	sync(true); 
 	_unlock();
 	_mem_free_char<char>(A1); 
@@ -135,7 +135,7 @@ void ImageBase<_NCH,M>::to_bmp(const std::string & outfile)
 	assert (__content_loaded);
 	auto fig = BMP(_W, _H);
 	char * tmp = _mem_alloc_char<char>(_SIZE_IMG);
-	_IMG->copy_out(tmp); // assuming synchronized
+	_IMG->CopyOut(tmp); // assuming synchronized
 	_lock();
 	fig.RGB_interleaving_fill_data<char>(tmp, _NCH);
 	_unlock();
@@ -150,7 +150,7 @@ void ImageBase<_NCH,M>::to_bmp_one_channel(const std::string & outfile, int ch)
 	if ((ch < 0) || (ch > 2)) { return; } // 3 channels at most
 	auto fig = BMP(_W, _H);
 	char * tmp = _mem_alloc_char<char>(_SIZE_IMG);
-	_IMG->copy_out(tmp); // assuming synchronized
+	_IMG->CopyOut(tmp); // assuming synchronized
 	_lock();
 	fig.fill_one_channel_interleaving<char>(tmp, ch, _NCH, 2-ch);
 	_unlock();

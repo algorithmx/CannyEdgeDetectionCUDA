@@ -90,13 +90,13 @@ class Mem
 		void set_byte_unsafe(int pos, T c)
 		{ _MEM[pos] = c; } 
 
-		virtual void copy_in(T* src) = 0 ;
+		virtual void CopyIn(T* src) = 0 ;
 
-		virtual void copy_out(T* dst) = 0 ;
+		virtual void CopyOut(T* dst) = 0 ;
 
-		virtual void cu_copy_in(T* src)  = 0 ;
+		virtual void cuCopyIn(T* src)  = 0 ;
 
-		virtual void cu_copy_out(T* src) = 0 ;
+		virtual void cuCopyOut(T* src) = 0 ;
 
 		virtual void sync(bool up) = 0 ;
 
@@ -151,7 +151,7 @@ class CPU : public Mem<T>
 		{ 
 			_mem_free();
 			_mem_alloc();
-			copy_in(M._MEM);
+			CopyIn(M._MEM);
 		}
 
 		CPU<T> &operator=(CPU<T> const& M) 
@@ -162,31 +162,31 @@ class CPU : public Mem<T>
 			_mem_free();
 			Mem<T>::_SIZE = M._SIZE;
 			_mem_alloc();
-			copy_in(M._MEM);
+			CopyIn(M._MEM);
 			//
 			return *this;
 		}
 
 		~CPU(){ _mem_free(); }
 
-		void copy_in(T* src)
+		void CopyIn(T* src)
 		{ 
 			Mem<T>::_lock(); 
 			_mem_copy<T>(src, Mem<T>::_MEM, Mem<T>::_SIZE);
 			Mem<T>::_unlock(); 
 		}
 
-		void copy_out(T* dst)
+		void CopyOut(T* dst)
 		{
 			Mem<T>::_lock(); 
 			_mem_copy<T>(Mem<T>::_MEM, dst, Mem<T>::_SIZE); // no need to sync()
 			Mem<T>::_unlock(); 
 		}
 
-		void cu_copy_in(T* src)
+		void cuCopyIn(T* src)
 		{}
 
-		void cu_copy_out(T* src)
+		void cuCopyOut(T* src)
 		{}
 
 		void sync(bool up = false)
@@ -223,7 +223,7 @@ class CPU : public Mem<T>
 		{
 			T* DST = _mem_alloc_char<T>(Mem<T>::_SIZE) ;
 			execute_kernel(DST, ExecutionPolicy(), cpu_function, args...);
-			Mem<T>::copy_in(DST);
+			Mem<T>::CopyIn(DST);
 			_mem_free_char<T>(DST);
 		}
 
@@ -262,7 +262,7 @@ class CPUpinned : public Mem<T>
 			//println("CPUpinned copy constructor called.");
 			_mem_free();
 			_mem_alloc();
-			copy_in(M._MEM);
+			CopyIn(M._MEM);
 		}
 
 		CPUpinned<T> &operator=(CPUpinned<T> const& M)
@@ -273,7 +273,7 @@ class CPUpinned : public Mem<T>
 			_mem_free();
 			Mem<T>::_SIZE = M._SIZE;
 			_mem_alloc();
-			copy_in(M._MEM);
+			CopyIn(M._MEM);
 			//
 			return *this;
 		}
@@ -281,22 +281,22 @@ class CPUpinned : public Mem<T>
 		~CPUpinned()
 		{ _mem_free(); }
 
-		void copy_in(T* src)
+		void CopyIn(T* src)
 		{ 
 			_cu_mem_copy<T> (src, Mem<T>::_MEM, Mem<T>::_SIZE, cudaMemcpyHostToHost); 
 		}
 
-		void copy_out(T* dst)
+		void CopyOut(T* dst)
 		{ 
 			Mem<T>::_lock();
 			_cu_mem_copy<T> (Mem<T>::_MEM, dst, Mem<T>::_SIZE, cudaMemcpyHostToHost); 
 			Mem<T>::_unlock();
 		}
 
-		void cu_copy_in(T* src)
+		void cuCopyIn(T* src)
 		{}
 
-		void cu_copy_out(T* src)
+		void cuCopyOut(T* src)
 		{}
 
 		void sync(bool up = false)
@@ -347,9 +347,9 @@ class GPU : public CPU<T>
 			_gpu_mem_free();
 			CPU<T>::_SIZE = M._SIZE;
 			CPU<T>::_mem_alloc();
-			copy_in(M._MEM);
+			CopyIn(M._MEM);
 			_gpu_mem_alloc();
-			cu_copy_in(M._MEM_GPU);
+			cuCopyIn(M._MEM_GPU);
 			sync(true) ; // upload
 			//
 			return *this;
@@ -358,7 +358,7 @@ class GPU : public CPU<T>
 		~GPU()
 		{ _gpu_mem_free(); }
 
-		void copy_in(T* src)
+		void CopyIn(T* src)
 		{
 			CPU<T>::_lock(); 
 			_mem_copy<T>(src, CPU<T>::_MEM, CPU<T>::_SIZE);
@@ -366,21 +366,21 @@ class GPU : public CPU<T>
 			sync(true) ;
 		}
 
-		void copy_out(T* dst)
+		void CopyOut(T* dst)
 		{
 			CPU<T>::_lock(); 
 			_mem_copy<T>(CPU<T>::_MEM, dst, CPU<T>::_SIZE);
 			CPU<T>::_unlock(); 
 		}
 
-		void cu_copy_in(T* src)
+		void cuCopyIn(T* src)
 		{
 			CPU<T>::_lock(); 
 			_cu_mem_copy<T> (src, _MEM_GPU, CPU<T>::_SIZE, cudaMemcpyDeviceToDevice); 
 			CPU<T>::_unlock();
 		}
 
-		void cu_copy_out(T* dst)
+		void cuCopyOut(T* dst)
 		{
 			CPU<T>::_lock();
 			_cu_mem_copy<T> (_MEM_GPU, dst, CPU<T>::_SIZE, cudaMemcpyDeviceToDevice); 
@@ -433,7 +433,7 @@ class GPU : public CPU<T>
 		{
 			T* TMP = _cu_mem_alloc_char<T>(CPU<T>::_SIZE) ;
 			execute_kernel(TMP, ExecutionPolicy(), cuda_kernel, args...);
-			CPU<T>::cu_copy_in(TMP);
+			CPU<T>::cuCopyIn(TMP);
 			CPU<T>::sync(false); // download
 			_cu_mem_free_char<T>(TMP);
 		}
@@ -501,9 +501,9 @@ class GPUpinned : public CPUpinned<T>
 			_gpu_mem_free();
 			CPUpinned<T>::_SIZE = M._SIZE;
 			CPUpinned<T>::_mem_alloc();
-			CPUpinned<T>::copy_in(M._MEM);
+			CPUpinned<T>::CopyIn(M._MEM);
 			_gpu_mem_alloc();
-			CPUpinned<T>::cu_copy_in(M._MEM_GPU);
+			CPUpinned<T>::cuCopyIn(M._MEM_GPU);
 			sync(true) ; // upload
 			//
 			return *this;
@@ -514,7 +514,7 @@ class GPUpinned : public CPUpinned<T>
 			_gpu_mem_free();
 		}
 
-		void copy_in(T* src)
+		void CopyIn(T* src)
 		{
 			CPUpinned<T>::_lock(); 
 			_cu_mem_copy<T> (src, CPUpinned<T>::_MEM, CPUpinned<T>::_SIZE, cudaMemcpyHostToHost); 
@@ -522,21 +522,21 @@ class GPUpinned : public CPUpinned<T>
 			sync(true) ; // upload
 		}
 
-		void cu_copy_in(T* src)
+		void cuCopyIn(T* src)
 		{
 			CPUpinned<T>::_lock(); 
 			_cu_mem_copy<T> (src, _MEM_GPU, CPUpinned<T>::_SIZE, cudaMemcpyDeviceToDevice); 
 			CPUpinned<T>::_unlock();
 		}
 
-		void cu_copy_out(T* dst)
+		void cuCopyOut(T* dst)
 		{
 			CPUpinned<T>::_lock();
 			_cu_mem_copy<T> (_MEM_GPU, dst, CPUpinned<T>::_SIZE, cudaMemcpyDeviceToDevice); 
 			CPUpinned<T>::_unlock();
 		}
 
-		void copy_out(T* dst)
+		void CopyOut(T* dst)
 		{
 			CPUpinned<T>::_lock();
 			_cu_mem_copy<T> (CPUpinned<T>::_MEM, dst, CPUpinned<T>::_SIZE, cudaMemcpyHostToHost);
@@ -615,9 +615,9 @@ class GPUstream : public GPUpinned<T>
 			GPUpinned<T>::_gpu_mem_free();
 			GPUpinned<T>::_SIZE = M._SIZE;
 			GPUpinned<T>::_mem_alloc();
-			GPUpinned<T>::copy_in(M._MEM);
+			GPUpinned<T>::CopyIn(M._MEM);
 			GPUpinned<T>::_gpu_mem_alloc();
-			GPUpinned<T>::cu_copy_in(M._MEM_GPU);
+			GPUpinned<T>::cuCopyIn(M._MEM_GPU);
 			sync(true) ; // upload
 			//
 			return *this;
@@ -629,7 +629,7 @@ class GPUstream : public GPUpinned<T>
 				gpuErrchk(cudaStreamDestroy(_CUDA_STREAM));
 		}
 
-		void copy_in(T* src)
+		void CopyIn(T* src)
 		{
 			GPUpinned<T>::_lock(); 
 			_cu_async_mem_copy<T>(src, GPUpinned<T>::_MEM, GPUpinned<T>::_SIZE, cudaMemcpyHostToHost, _CUDA_STREAM); 
@@ -637,21 +637,21 @@ class GPUstream : public GPUpinned<T>
 			sync(true); // upload
 		}
 
-		void copy_out(T* dst)
+		void CopyOut(T* dst)
 		{
 			GPUpinned<T>::_lock();
 			_cu_async_mem_copy<T>(GPUpinned<T>::_MEM, dst, GPUpinned<T>::_SIZE, cudaMemcpyHostToHost, _CUDA_STREAM);
 			GPUpinned<T>::_unlock();
 		}
 
-		void cu_copy_in(T* src)
+		void cuCopyIn(T* src)
 		{
 			GPUpinned<T>::_lock(); 
 			_cu_async_mem_copy<T> (src, GPUpinned<T>::_MEM_GPU, GPUpinned<T>::_SIZE, cudaMemcpyDeviceToDevice, _CUDA_STREAM); 
 			GPUpinned<T>::_unlock();
 		}
 
-		void cu_copy_out(T* dst)
+		void cuCopyOut(T* dst)
 		{
 			GPUpinned<T>::_lock();
 			_cu_async_mem_copy<T> (GPUpinned<T>::_MEM_GPU, dst, GPUpinned<T>::_SIZE, cudaMemcpyDeviceToDevice, _CUDA_STREAM); 
@@ -701,7 +701,7 @@ class GPUstream : public GPUpinned<T>
 							{
 			T* TMP = _cu_async_mem_alloc_char<T>(GPUpinned<T>::_SIZE, _CUDA_STREAM) ;
 			execute_kernel(TMP, ExecutionPolicy(), cuda_kernel, args...);
-			GPUpinned<T>::cu_copy_in(TMP);
+			GPUpinned<T>::cuCopyIn(TMP);
 			GPUpinned<T>::sync(false); // download
 			_cu_async_mem_free_char<T>(TMP, _CUDA_STREAM);
 		}
