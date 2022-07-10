@@ -123,6 +123,30 @@ class RGB_GZ_VHP : public ImageBase<3,M>
             _mem_free_char<char>(DST); 
         }
 
+        void calculate_gradient_amplitude_GPU(
+            RGB_GZ_VHP<M> & Iy,
+            const ExecutionPolicy & ExPol
+        )
+        {
+            merge_with_GPU(Iy, 0, ExPol, 64u, 8u, 16u);
+        }
+
+        void calculate_gradient_direction_GPU(
+            RGB_GZ_VHP<M> & Iy,
+            const ExecutionPolicy & ExPol
+        )
+        {
+            merge_with_GPU(Iy, 1, ExPol, 64u, 8u, 16u);
+        }
+
+        void non_maximal_suppression_GPU(
+            RGB_GZ_VHP<M> &SOBEL_DIR,
+            const ExecutionPolicy & ExPol
+        )
+        {
+            merge_with_GPU(SOBEL_DIR, 2, ExPol, 64u, 8u, 16u);
+        }
+
         void double_threshold_GPU(
             const ExecutionPolicy & ExPol, 
             unsigned int thrL = 8u,
@@ -133,14 +157,6 @@ class RGB_GZ_VHP : public ImageBase<3,M>
             merge_with_GPU(dummy, 3, ExPol, 64u, thrL, thrH);
         }
 
-        void non_maximal_suppression_GPU(
-            const ExecutionPolicy & ExPol
-        )
-        {
-            RGB_GZ_VHP<M> dummy(ImageBase<3,M>::_H, ImageBase<3,M>::_W);
-            merge_with_GPU(dummy, 2, ExPol, 64u, 8u, 16u);
-        }
-
         void rescaling_GPU(
             const ExecutionPolicy & ExPol, 
             unsigned int cutoff = 64u
@@ -149,23 +165,6 @@ class RGB_GZ_VHP : public ImageBase<3,M>
             RGB_GZ_VHP<M> dummy(ImageBase<3,M>::_H, ImageBase<3,M>::_W);
             merge_with_GPU(dummy, 4, ExPol, cutoff, 8u, 16u);
         }
-
-        void calculate_gradient_direction_GPU(
-            RGB_GZ_VHP<M> & Iy,
-            const ExecutionPolicy & ExPol
-        )
-        {
-            merge_with_GPU(Iy, 2, ExPol, 64u, 8u, 16u);
-        }
-
-        void calculate_gradient_amplitude_GPU(
-            RGB_GZ_VHP<M> & Iy,
-            const ExecutionPolicy & ExPol
-        )
-        {
-            merge_with_GPU(Iy, 1, ExPol, 64u, 8u, 16u);
-        }
-
 
     protected:
 
