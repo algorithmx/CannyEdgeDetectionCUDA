@@ -24,7 +24,7 @@ void test_Mem(void) {
     delete F2;
     delete F3;
     delete F4;
-    println("*** test_Mem() is successful.");
+    println("*** test_Mem() is successful.\n\n");
 }
 
 
@@ -41,11 +41,12 @@ void test_IO(void) {
     BX.to_text_file<unsigned char>(std::string("GaussianFilter.uchar.fltr"), std::string("gaussian"));
     auto FX = FilterFromFile<3>("GaussianFilter.uchar.fltr");
     assert ( FX.compare_to(BX) ) ;
-    println("*** test_IO() is successful.");
+    println("*** test_IO() is successful.\n\n");
 };
 
 
 void test_copy(void) {
+    println("*** test_copy() started.");
     auto GF1 = FilterFromFile<1>("Gaussian.Filter");
     auto GF3red = FilterBase<3>(GF1.get_H());
     GF3red.mono2red(GF1);
@@ -60,17 +61,19 @@ void test_copy(void) {
     GF3green.to_bmp(std::string("GaussianFilter.G.bmp")) ;
     GF3blue.to_text_file< unsigned char>(std::string("GaussianFilter.B.fltr"), std::string("gaussian_blue"));
     GF3blue.to_bmp(std::string("GaussianFilter.B.bmp")) ;
+
+    println("*** test_copy() is successful.\n\n");
 };
 
 
 void test_gaussian_filter_CPU(int N = 12) {
-    //auto BX = BoxFilter<3>(5);
-    auto BX = GaussianFilter<3>(10,3.0);
-    BX.to_text_file<unsigned char>(std::string("box.uchar.fltr"), std::string("box"));
-    BX.to_text_file<char>(std::string("box.char.fltr"), std::string("box"));
-    BX.to_bmp_one_channel(std::string("box.R.bmp"), 0) ;
-    BX.to_bmp_one_channel(std::string("box.G.bmp"), 1) ;
-    BX.to_bmp_one_channel(std::string("box.B.bmp"), 2) ;
+    println("*** test_gaussian_filter_CPU() started.");
+    auto GX = GaussianFilter<3>(11,6.0);
+    GX.to_text_file<unsigned char>(std::string("box.uchar.fltr"), std::string("box"));
+    GX.to_text_file<char>(std::string("box.char.fltr"), std::string("box"));
+    GX.to_bmp_one_channel(std::string("box.R.bmp"), 0) ;
+    GX.to_bmp_one_channel(std::string("box.G.bmp"), 1) ;
+    GX.to_bmp_one_channel(std::string("box.B.bmp"), 2) ;
 
     RGB_GZ_VHP<CPU<char>> *fig1  = new RGB_GZ_VHP<CPU<char>>( HEIGHT, WIDTH ) ; 
     for (int i=11; i<=N; ++i) {
@@ -79,20 +82,25 @@ void test_gaussian_filter_CPU(int N = 12) {
         std::cout << "processing " << FN << std::endl; 
         fig1->load_from_file( FN ) ;
         println("launching apply_filter_CPU() ... ");
-        fig1->apply_filter_CPU( BX ) ;
+        fig1->apply_filter_CPU( GX ) ;
         fig1->to_bmp(FN + std::string(".bmp")) ;
         fig1->to_bmp_one_channel(FN + std::string(".R.bmp"), 0) ;
         fig1->to_bmp_one_channel(FN + std::string(".G.bmp"), 1) ;
         fig1->to_bmp_one_channel(FN + std::string(".B.bmp"), 2) ;
         auto Tf = timing(T0, "    Timing : total ") ;
     }
-    delete fig1; 
+
+    delete fig1;
+
+    println("*** test_gaussian_filter_CPU() is successful.\n\n");
+
     return ;
 };
 
 
 void test_gaussian_filter_GPU(int N = 12) {
-    auto GX = GaussianFilter<3>(101,60.0);
+    println("*** test_gaussian_filter_GPU() started.");
+    auto GX = GaussianFilter<3>(11,6.0);
     RGB_GZ_VHP<GPUstream<char>> *fig1  = new RGB_GZ_VHP<GPUstream<char>>( HEIGHT, WIDTH ) ; 
     auto fig1_c = *fig1 ;
     for (int i=11; i<=N; ++i) {
@@ -100,7 +108,6 @@ void test_gaussian_filter_GPU(int N = 12) {
         auto FN = std::string("../data/10") + std::to_string(i) + std::string(".rgb.gz") ;
         std::cout << "processing " << FN << std::endl; 
         fig1->load_from_file( FN ) ;
-        println("launching apply_filter_GPU() ... ");
         fig1->apply_filter_GPU<unsigned char>( GX, ExecutionPolicy(dim3(16,16,4),dim3((HEIGHT+15)/16,(WIDTH+15)/16,1)) ) ;
         fig1->to_bmp(FN + std::string(".bmp")) ;
         fig1->to_bmp_one_channel(FN + std::string(".R.bmp"), 0) ;
@@ -108,12 +115,18 @@ void test_gaussian_filter_GPU(int N = 12) {
         fig1->to_bmp_one_channel(FN + std::string(".B.bmp"), 2) ;
         auto Tf = timing(T0, "    Timing : total ") ;
     }
+
     delete fig1; 
+
+    println("*** test_gaussian_filter_GPU() is successful.\n\n");
+
     return ;
 };
 
 
-void test_sobel_GPU(int N=15) {
+void test_sobel_GPU(int N=13) {
+
+    println("*** test_sobel_GPU() started.");
 
     GaussianFilter<3> GF(17,5.0);
     FilterBase<3> SBX(3);
@@ -161,7 +174,7 @@ void test_sobel_GPU(int N=15) {
         // f_dir->to_bmp_one_channel(FN + std::string(".G.dir.bmp"), 1) ;
         // f_dir->to_bmp_one_channel(FN + std::string(".B.dir.bmp"), 2) ;
 
-        f_Ix_amp->non_maximal_suppression_GPU(ExPola) ;
+        f_Ix_amp->non_maximal_suppression_GPU(*f_dir, ExPola) ;
         // f_Ix_amp->to_bmp(FN + std::string(".supp.bmp")) ;
         // f_Ix_amp->to_bmp_one_channel(FN + std::string(".R.supp.bmp"), 0) ;
         // f_Ix_amp->to_bmp_one_channel(FN + std::string(".G.supp.bmp"), 1) ;
@@ -180,15 +193,18 @@ void test_sobel_GPU(int N=15) {
         // f_Ix_amp->to_bmp_one_channel(FN + std::string(".B.rescale.bmp"), 2) ;
 
         auto Tf = timing(T0, "    Timing : total ") ;
-
     }
 
     delete f_Ix_amp; delete f_Iy; delete f_dir; 
+
+    println("*** test_sobel_GPU() is successful.\n\n");
+
     return ;
 };
 
 
-void test_sobel_CPU_incomplete(int N=15) {
+void test_sobel_CPU_incomplete(int N=13) {
+    println("*** test_sobel_CPU_incomplete() started.");
 
     GaussianFilter<3> GF(9,1.5);
     FilterBase<3> SBX(3);
@@ -244,7 +260,8 @@ void test_sobel_CPU_incomplete(int N=15) {
     delete fig1; 
     delete fig2; 
     delete fig3; 
-    
+
+    println("*** test_sobel_CPU_incomplete() is successful.\n\n");
     return ;
 };
 
@@ -253,10 +270,10 @@ void test_sobel_CPU_incomplete(int N=15) {
 int main(int argc, char** argv) {
     test_Mem() ;
     test_IO();
-    // test_cast();
-    test_gaussian_filter_CPU() ;
-    test_gaussian_filter_GPU() ;
-    test_sobel_CPU_incomplete(12);
-    test_sobel_GPU(12);
+    test_cast();
+    test_gaussian_filter_CPU();
+    test_gaussian_filter_GPU();
+    test_sobel_CPU_incomplete(13);
+    test_sobel_GPU(13);
     return 0;
 };
