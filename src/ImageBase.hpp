@@ -77,6 +77,8 @@ class ImageBase
 			return _HEADER->get_byte(pos); 
 		}
 
+		bool is_empty(void) { return !__content_loaded; }
+
 		char get_header_char_unsafe(int pos) const
 		{
 			return _HEADER->get_byte_unsafe(pos);
