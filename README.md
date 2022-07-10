@@ -6,7 +6,7 @@ This is the course project for [CUDA at Scale For The Enterprise](https://www.co
 
 In this project, I have implemented the [Canny edge detection algorithm](https://en.wikipedia.org/wiki/Canny_edge_detector) using C++ and CUDA. The major references are:
 
-+ []() ([backup copy](./references/))
++ []() ([backup copy](./references/Week4.pdf))
 + []() ([backup copy](./references/))
 
 
@@ -50,12 +50,18 @@ because it assumes `./data` to be the location of the data folder. This does not
 
 If you want to skip the test, just run `make clean build-canny` instead. It will generate the binary  `CannyStepVHP.exe`  in the  `./bin`  folder. 
 
+## Important details of the code
 
-## The `CannyStepVHP.exe` binary
+### `CannyStepVHP()` function 
+
+### `class Mem`
+
+### `class ImageBase`
 
 
 ## The Visible Human Project
 
+The test data is obtained from the Visible Human Project website. 
 
 ## Sample output
 
