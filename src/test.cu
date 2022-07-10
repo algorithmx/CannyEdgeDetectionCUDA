@@ -78,7 +78,7 @@ void test_gaussian_filter_CPU(int N = 12) {
     RGB_GZ_VHP<CPU<char>> *fig1  = new RGB_GZ_VHP<CPU<char>>( HEIGHT, WIDTH ) ; 
     for (int i=11; i<=N; ++i) {
         auto T0 = bch::high_resolution_clock::now();
-        auto FN = std::string("../data/10") + std::to_string(i) + std::string(".rgb.gz") ;
+        auto FN = std::string("./data/10") + std::to_string(i) + std::string(".rgb.gz") ;
         std::cout << "processing " << FN << std::endl; 
         fig1->load_from_file( FN ) ;
         println("launching apply_filter_CPU() ... ");
@@ -105,7 +105,7 @@ void test_gaussian_filter_GPU(int N = 12) {
     auto fig1_c = *fig1 ;
     for (int i=11; i<=N; ++i) {
         auto T0 = bch::high_resolution_clock::now();
-        auto FN = std::string("../data/10") + std::to_string(i) + std::string(".rgb.gz") ;
+        auto FN = std::string("./data/10") + std::to_string(i) + std::string(".rgb.gz") ;
         std::cout << "processing " << FN << std::endl; 
         fig1->load_from_file( FN ) ;
         fig1->apply_filter_GPU<unsigned char>( GX, ExecutionPolicy(dim3(16,16,4),dim3((HEIGHT+15)/16,(WIDTH+15)/16,1)) ) ;
@@ -146,7 +146,7 @@ void test_sobel_GPU(int N=13) {
 
         auto T0 = bch::high_resolution_clock::now();
 
-        auto FN = std::string("../data/10") + std::to_string(i) + std::string(".rgb.gz") ;
+        auto FN = std::string("./data/10") + std::to_string(i) + std::string(".rgb.gz") ;
         std::cout << "processing " << FN << std::endl; 
         f_Ix_amp->load_from_file( FN ) ;
         *f_Iy = *f_Ix_amp;
@@ -223,7 +223,7 @@ void test_sobel_CPU_incomplete(int N=13) {
 
         auto T0 = bch::high_resolution_clock::now();
 
-        auto FN = std::string("../data/10") + std::to_string(i) + std::string(".rgb.gz") ;
+        auto FN = std::string("./data/10") + std::to_string(i) + std::string(".rgb.gz") ;
         std::cout << "processing " << FN << std::endl; 
         fig1->load_from_file( FN ) ;
         *fig2 = *fig1;
