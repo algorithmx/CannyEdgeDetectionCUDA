@@ -40,8 +40,14 @@ test: clean build-test run-test
 
 ##################
 
-build: build-test
+build: build-canny build-test
 
 run: run-test
 
 all: clean build run
+
+##################
+
+build-canny: CannyStepVHP.cu
+	clear
+	$(COMPILER) --std c++17 -O3 -lineinfo CannyStepVHP.cu -o CannyStepVHP.exe -I$(IDIR) $(BOOST_FLAGS) $(CUDA_FLAGS)
