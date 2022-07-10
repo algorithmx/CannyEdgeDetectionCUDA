@@ -133,9 +133,17 @@ class RGB_GZ_VHP : public ImageBase<3,M>
             merge_with_GPU(dummy, 3, ExPol, 64u, thrL, thrH);
         }
 
+        void non_maximal_suppression_GPU(
+            const ExecutionPolicy & ExPol
+        )
+        {
+            RGB_GZ_VHP<M> dummy(ImageBase<3,M>::_H, ImageBase<3,M>::_W);
+            merge_with_GPU(dummy, 2, ExPol, 64u, 8u, 16u);
+        }
+
         void rescaling_GPU(
             const ExecutionPolicy & ExPol, 
-            unsigned int cutoff = 64u,
+            unsigned int cutoff = 64u
         )
         {
             RGB_GZ_VHP<M> dummy(ImageBase<3,M>::_H, ImageBase<3,M>::_W);
