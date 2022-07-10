@@ -1,2 +1,6 @@
 *.pdf
+*.exe
+*.txt
+*.fltr
+*.bmp
 .vscode

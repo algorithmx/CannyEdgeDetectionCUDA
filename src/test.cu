@@ -4,7 +4,8 @@
 const int HEIGHT = 2700 ;
 const int WIDTH  = 4096 ;
 
-void test1(void) { 
+void test_Mem(void) { 
+    println("*** test_Mem() started.");
     // prepare Mempool and Stream 
     cudaMemPool_t mempool;
     gpuErrchk ( cudaDeviceGetDefaultMemPool(&mempool, 0) ) ; // device = 0
@@ -23,34 +24,42 @@ void test1(void) {
     delete F2;
     delete F3;
     delete F4;
-} ;
+    println("*** test_Mem() is successful.");
+}
 
 
-void test_RGB_GPU_stream(int N = 12) {
-    RGB_GZ_VHP<GPUstream<char>> *fig1  = new RGB_GZ_VHP<GPUstream<char>>( HEIGHT, WIDTH ) ; 
-    RGB_GZ_VHP<GPUstream<char>> *fig2  = new RGB_GZ_VHP<GPUstream<char>>( HEIGHT, WIDTH ) ; 
-    RGB_GZ_VHP<GPUstream<char>> *fig3  = new RGB_GZ_VHP<GPUstream<char>>( HEIGHT, WIDTH ) ; 
-    RGB_GZ_VHP<GPUstream<char>> *fig4  = new RGB_GZ_VHP<GPUstream<char>>( HEIGHT, WIDTH ) ; 
-    std::vector<RGB_GZ_VHP<GPUstream<char>> *> figs = {fig1, fig2, fig3, fig4} ;
-    for (int i=11; i<=N; ++i) {
-        auto T0 = bch::high_resolution_clock::now();
-        auto FN = std::string("../data/10") + std::to_string(i) + std::string(".rgb.gz") ;
-        std::cout << "processing " << FN << std::endl; 
-        figs[i%4]->load_from_file( FN ) ;
-        figs[i%4]->to_bmp(FN + std::string(".RGB.bmp")) ;
-        auto Tf = timing(T0, "    Timing : total ") ;
+void test_cast(void) {
+    for (int i=-128; i<=127; i++){
+        std::cout << "char_uchar_int(int_char(i=" << i << ")) = " << char_uchar_int(int_char(i)) << std::endl;
     }
-    delete fig1; delete fig2; delete fig3; delete fig4;
-    return ;
-};
+}
 
 
 void test_IO(void) {
+    println("*** test_IO() started.");
     auto BX = GaussianFilter<3>(10,3.0);
     BX.to_text_file<unsigned char>(std::string("GaussianFilter.uchar.fltr"), std::string("gaussian"));
     auto FX = FilterFromFile<3>("GaussianFilter.uchar.fltr");
     assert ( FX.compare_to(BX) ) ;
     println("*** test_IO() is successful.");
+};
+
+
+void test_copy(void) {
+    auto GF1 = FilterFromFile<1>("Gaussian.Filter");
+    auto GF3red = FilterBase<3>(GF1.get_H());
+    GF3red.mono2red(GF1);
+    auto GF3blue = FilterBase<3>(GF1.get_H());
+    GF3blue.mono2blue(GF1);
+    auto GF3green = FilterBase<3>(GF1.get_H());
+    GF3green.mono2green(GF1);
+
+    GF3red.to_text_file<  unsigned char>(std::string("GaussianFilter.R.fltr"), std::string("gaussian_red"));
+    GF3red.to_bmp(std::string("GaussianFilter.R.bmp")) ;
+    GF3green.to_text_file<unsigned char>(std::string("GaussianFilter.G.fltr"), std::string("gaussian_green"));
+    GF3green.to_bmp(std::string("GaussianFilter.G.bmp")) ;
+    GF3blue.to_text_file< unsigned char>(std::string("GaussianFilter.B.fltr"), std::string("gaussian_blue"));
+    GF3blue.to_bmp(std::string("GaussianFilter.B.bmp")) ;
 };
 
 
@@ -104,13 +113,6 @@ void test_gaussian_filter_GPU(int N = 12) {
 };
 
 
-void test_cast(void) {
-    for (int i=-128; i<=127; i++){
-        std::cout << "char_uchar_int(int_char(i=" << i << ")) = " << char_uchar_int(int_char(i)) << std::endl;
-    }
-};
-
-
 void test_sobel_GPU(int N=15) {
 
     GaussianFilter<3> GF(17,5.0);
@@ -126,7 +128,6 @@ void test_sobel_GPU(int N=15) {
     RGB_GZ_VHP<GPU<char>> *f_dir = new RGB_GZ_VHP<GPU<char>>(*f_Ix_amp);
 
     auto ExPola = ExecutionPolicy(dim3(16,16,3),dim3((HEIGHT+15)/16,(WIDTH+15)/16,1));
-    auto ExPolb = ExecutionPolicy(dim3(32,32,1),dim3((HEIGHT+31)/32,(WIDTH+31)/32,1));
 
     for (int i=11; i<=N; ++i) {
 
@@ -148,31 +149,31 @@ void test_sobel_GPU(int N=15) {
         f_Iy->apply_filter_GPU<char>( SBY, ExPola );
         // f_Iy->to_bmp(FN + std::string(".sb2.bmp")) ;
 
-        f_Ix_amp->merge_with_GPU(*f_Iy, 0, ExPola) ;
+        f_Ix_amp->calculate_gradient_amplitude_GPU(*f_Iy, ExPola) ;
         // f_Ix_amp->to_bmp(FN + std::string(".amp.bmp")) ;
         // f_Ix_amp->to_bmp_one_channel(FN + std::string(".R.amp.bmp"), 0) ;
         // f_Ix_amp->to_bmp_one_channel(FN + std::string(".G.amp.bmp"), 1) ;
         // f_Ix_amp->to_bmp_one_channel(FN + std::string(".B.amp.bmp"), 2) ;
 
-        f_dir->merge_with_GPU(*f_Iy, 1, ExPola) ;
+        f_dir->calculate_gradient_direction_GPU(*f_Iy, ExPola) ;
         // f_dir->to_bmp(FN + std::string(".dir.bmp")) ;
         // f_dir->to_bmp_one_channel(FN + std::string(".R.dir.bmp"), 0) ;
         // f_dir->to_bmp_one_channel(FN + std::string(".G.dir.bmp"), 1) ;
         // f_dir->to_bmp_one_channel(FN + std::string(".B.dir.bmp"), 2) ;
 
-        f_Ix_amp->merge_with_GPU(*f_dir, 2, ExPola) ;
+        f_Ix_amp->non_maximal_suppression_GPU(ExPola) ;
         // f_Ix_amp->to_bmp(FN + std::string(".supp.bmp")) ;
         // f_Ix_amp->to_bmp_one_channel(FN + std::string(".R.supp.bmp"), 0) ;
         // f_Ix_amp->to_bmp_one_channel(FN + std::string(".G.supp.bmp"), 1) ;
         // f_Ix_amp->to_bmp_one_channel(FN + std::string(".B.supp.bmp"), 2) ;
 
-        f_Ix_amp->merge_with_GPU(*f_Iy, 4, ExPola) ;
+        f_Ix_amp->rescaling_GPU(ExPola, 64u) ;
         f_Ix_amp->to_bmp(FN + std::string(".rescale.bmp")) ;
         // f_Ix_amp->to_bmp_one_channel(FN + std::string(".R.rescale.bmp"), 0) ;
         // f_Ix_amp->to_bmp_one_channel(FN + std::string(".G.rescale.bmp"), 1) ;
         // f_Ix_amp->to_bmp_one_channel(FN + std::string(".B.rescale.bmp"), 2) ;
 
-        f_Ix_amp->merge_with_GPU(*f_Iy, 3, ExPola) ;
+        f_Ix_amp->double_threshold_GPU(ExPola, 8u, 16u) ;
         f_Ix_amp->to_bmp(FN + std::string(".DTH.bmp")) ;
         // f_Ix_amp->to_bmp_one_channel(FN + std::string(".R.rescale.bmp"), 0) ;
         // f_Ix_amp->to_bmp_one_channel(FN + std::string(".G.rescale.bmp"), 1) ;
@@ -187,7 +188,7 @@ void test_sobel_GPU(int N=15) {
 };
 
 
-void test_sobel_CPU(int N=15) {
+void test_sobel_CPU_incomplete(int N=15) {
 
     GaussianFilter<3> GF(9,1.5);
     FilterBase<3> SBX(3);
@@ -248,32 +249,14 @@ void test_sobel_CPU(int N=15) {
 };
 
 
-void test_copy(void) {
-    auto GF1 = FilterFromFile<1>("Gaussian.Filter");
-    auto GF3red = FilterBase<3>(GF1.get_H());
-    GF3red.mono2red(GF1);
-    auto GF3blue = FilterBase<3>(GF1.get_H());
-    GF3blue.mono2blue(GF1);
-    auto GF3green = FilterBase<3>(GF1.get_H());
-    GF3green.mono2green(GF1);
-
-    GF3red.to_text_file<  unsigned char>(std::string("GaussianFilter.R.fltr"), std::string("gaussian_red"));
-    GF3red.to_bmp(std::string("GaussianFilter.R.bmp")) ;
-    GF3green.to_text_file<unsigned char>(std::string("GaussianFilter.G.fltr"), std::string("gaussian_green"));
-    GF3green.to_bmp(std::string("GaussianFilter.G.bmp")) ;
-    GF3blue.to_text_file< unsigned char>(std::string("GaussianFilter.B.fltr"), std::string("gaussian_blue"));
-    GF3blue.to_bmp(std::string("GaussianFilter.B.bmp")) ;
-};
-
 
 int main(int argc, char** argv) {
-    // test_RGB_GPU_stream() ;
-    // test1() ;
-    // test_gaussian_filter_CPU() ;
-    // test_gaussian_filter_GPU() ;
+    test_Mem() ;
+    test_IO();
     // test_cast();
-    // test_IO();
-    //test_sobel_CPU();
-    test_sobel_GPU(99);
+    test_gaussian_filter_CPU() ;
+    test_gaussian_filter_GPU() ;
+    test_sobel_CPU_incomplete(12);
+    test_sobel_GPU(12);
     return 0;
 };
