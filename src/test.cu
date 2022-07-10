@@ -270,7 +270,7 @@ void test_sobel_CPU_incomplete(int N=13) {
 int main(int argc, char** argv) {
     test_Mem() ;
     test_IO();
-    test_cast();
+    //test_cast();
     test_gaussian_filter_CPU();
     test_gaussian_filter_GPU();
     test_sobel_CPU_incomplete(13);
