@@ -78,8 +78,7 @@
 #endif
 
 // CUDA Utility Helper Functions
-inline int stringRemoveDelimiter(char delimiter, const char *string)
-{
+inline int stringRemoveDelimiter(char delimiter, const char *string) {
     int string_start = 0;
 
     while (string[string_start] == delimiter)
@@ -95,8 +94,7 @@ inline int stringRemoveDelimiter(char delimiter, const char *string)
     return string_start;
 }
 
-inline int getFileExtension(char *filename, char **extension)
-{
+inline int getFileExtension(char *filename, char **extension) {
     int string_length = (int)strlen(filename);
 
     while (filename[string_length--] != '.')
@@ -116,8 +114,7 @@ inline int getFileExtension(char *filename, char **extension)
 }
 
 
-inline bool checkCmdLineFlag(const int argc, const char **argv, const char *string_ref)
-{
+inline bool checkCmdLineFlag(const int argc, const char **argv, const char *string_ref) {
     bool bFound = false;
 
     if (argc >= 1)
@@ -145,8 +142,7 @@ inline bool checkCmdLineFlag(const int argc, const char **argv, const char *stri
 
 // This function wraps the CUDA Driver API into a template function
 template <class T>
-inline bool getCmdLineArgumentValue(const int argc, const char **argv, const char *string_ref, T *value)
-{
+inline bool getCmdLineArgumentValue(const int argc, const char **argv, const char *string_ref, T *value) {
     bool bFound = false;
 
     if (argc >= 1)
@@ -174,8 +170,7 @@ inline bool getCmdLineArgumentValue(const int argc, const char **argv, const cha
     return bFound;
 }
 
-inline int getCmdLineArgumentInt(const int argc, const char **argv, const char *string_ref)
-{
+inline int getCmdLineArgumentInt(const int argc, const char **argv, const char *string_ref) {
     bool bFound = false;
     int value = -1;
 
@@ -215,8 +210,7 @@ inline int getCmdLineArgumentInt(const int argc, const char **argv, const char *
     }
 }
 
-inline float getCmdLineArgumentFloat(const int argc, const char **argv, const char *string_ref)
-{
+inline float getCmdLineArgumentFloat(const int argc, const char **argv, const char *string_ref) {
     bool bFound = false;
     float value = -1;
 
@@ -257,8 +251,7 @@ inline float getCmdLineArgumentFloat(const int argc, const char **argv, const ch
 }
 
 inline bool getCmdLineArgumentString(const int argc, const char **argv,
-                                     const char *string_ref, char **string_retval)
-{
+                                     const char *string_ref, char **string_retval) {
     bool bFound = false;
 
     if (argc >= 1)

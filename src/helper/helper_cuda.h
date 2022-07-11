@@ -34,8 +34,7 @@
 
 // CUDA Runtime error messages
 #ifdef __DRIVER_TYPES_H__
-static const char *_cudaGetErrorEnum(cudaError_t error)
-{
+static const char *_cudaGetErrorEnum(cudaError_t error) {
     switch (error)
     {
         case cudaSuccess:
@@ -289,8 +288,7 @@ static const char *_cudaGetErrorEnum(cudaError_t error)
 
 #ifdef __cuda_cuda_h__
 // CUDA Driver API errors
-static const char *_cudaGetErrorEnum(CUresult error)
-{
+static const char *_cudaGetErrorEnum(CUresult error) {
     switch (error)
     {
         case CUDA_SUCCESS:
@@ -474,8 +472,7 @@ static const char *_cudaGetErrorEnum(CUresult error)
 
 #ifdef CUBLAS_API_H_
 // cuBLAS API errors
-static const char *_cudaGetErrorEnum(cublasStatus_t error)
-{
+static const char *_cudaGetErrorEnum(cublasStatus_t error) {
     switch (error)
     {
         case CUBLAS_STATUS_SUCCESS:
@@ -515,8 +512,7 @@ static const char *_cudaGetErrorEnum(cublasStatus_t error)
 
 #ifdef _CUFFT_H_
 // cuFFT API errors
-static const char *_cudaGetErrorEnum(cufftResult error)
-{
+static const char *_cudaGetErrorEnum(cufftResult error) {
     switch (error)
     {
         case CUFFT_SUCCESS:
@@ -575,8 +571,7 @@ static const char *_cudaGetErrorEnum(cufftResult error)
 
 #ifdef CUSPARSEAPI
 // cuSPARSE API errors
-static const char *_cudaGetErrorEnum(cusparseStatus_t error)
-{
+static const char *_cudaGetErrorEnum(cusparseStatus_t error) {
     switch (error)
     {
         case CUSPARSE_STATUS_SUCCESS:
@@ -613,8 +608,7 @@ static const char *_cudaGetErrorEnum(cusparseStatus_t error)
 
 #ifdef CUSOLVER_COMMON_H_
 //cuSOLVER API errors
-static const char *_cudaGetErrorEnum(cusolverStatus_t error)
-{
+static const char *_cudaGetErrorEnum(cusolverStatus_t error) {
    switch(error)
    {
        case CUSOLVER_STATUS_SUCCESS:
@@ -650,8 +644,7 @@ static const char *_cudaGetErrorEnum(cusolverStatus_t error)
 
 #ifdef CURAND_H_
 // cuRAND API errors
-static const char *_cudaGetErrorEnum(curandStatus_t error)
-{
+static const char *_cudaGetErrorEnum(curandStatus_t error) {
     switch (error)
     {
         case CURAND_STATUS_SUCCESS:
@@ -700,8 +693,7 @@ static const char *_cudaGetErrorEnum(curandStatus_t error)
 
 #ifdef NV_NPPIDEFS_H
 // NPP API errors
-static const char *_cudaGetErrorEnum(NppStatus error)
-{
+static const char *_cudaGetErrorEnum(NppStatus error) {
     switch (error)
     {
         case NPP_NOT_SUPPORTED_MODE_ERROR:
@@ -965,8 +957,7 @@ static const char *_cudaGetErrorEnum(NppStatus error)
 #endif
 
 template< typename T >
-void check(T result, char const *const func, const char *const file, int const line)
-{
+void check(T result, char const *const func, const char *const file, int const line) {
     if (result)
     {
         fprintf(stderr, "CUDA error at %s:%d code=%d(%s) \"%s\" \n",
@@ -984,8 +975,7 @@ void check(T result, char const *const func, const char *const file, int const l
 // This will output the proper error string when calling cudaGetLastError
 #define getLastCudaError(msg)      __getLastCudaError (msg, __FILE__, __LINE__)
 
-inline void __getLastCudaError(const char *errorMessage, const char *file, const int line)
-{
+inline void __getLastCudaError(const char *errorMessage, const char *file, const int line) {
     cudaError_t err = cudaGetLastError();
 
     if (cudaSuccess != err)
@@ -1003,14 +993,12 @@ inline void __getLastCudaError(const char *errorMessage, const char *file, const
 #endif
 
 // Float To Int conversion
-inline int ftoi(float value)
-{
+inline int ftoi(float value) {
     return (value >= 0 ? (int)(value + 0.5) : (int)(value - 0.5));
 }
 
 // Beginning of GPU Architecture definitions
-inline int _ConvertSMVer2Cores(int major, int minor)
-{
+inline int _ConvertSMVer2Cores(int major, int minor) {
     // Defines for GPU Architecture types (using the SM version to determine the # of cores per SM
     typedef struct
     {
@@ -1051,8 +1039,7 @@ inline int _ConvertSMVer2Cores(int major, int minor)
 
 #ifdef __CUDA_RUNTIME_H__
 // General GPU Device CUDA Initialization
-inline int gpuDeviceInit(int devID)
-{
+inline int gpuDeviceInit(int devID) {
     int device_count;
     checkCudaErrors(cudaGetDeviceCount(&device_count));
 
@@ -1098,8 +1085,7 @@ inline int gpuDeviceInit(int devID)
 }
 
 // This function returns the best GPU (with maximum GFLOPS)
-inline int gpuGetMaxGflopsDeviceId()
-{
+inline int gpuGetMaxGflopsDeviceId() {
     int current_device     = 0, sm_per_multiproc  = 0;
     int max_perf_device    = 0;
     int device_count       = 0, best_SM_arch      = 0;
@@ -1193,8 +1179,7 @@ inline int gpuGetMaxGflopsDeviceId()
 
 
 // Initialization code to find the best CUDA Device
-inline int findCudaDevice(int argc, const char **argv)
-{
+inline int findCudaDevice(int argc, const char **argv) {
     cudaDeviceProp deviceProp;
     int devID = 0;
 
@@ -1232,8 +1217,7 @@ inline int findCudaDevice(int argc, const char **argv)
 }
 
 // General check for CUDA GPU SM Capabilities
-inline bool checkCudaCapabilities(int major_version, int minor_version)
-{
+inline bool checkCudaCapabilities(int major_version, int minor_version) {
     cudaDeviceProp deviceProp;
     deviceProp.major = 0;
     deviceProp.minor = 0;

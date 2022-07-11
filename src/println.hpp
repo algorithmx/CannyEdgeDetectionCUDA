@@ -2,8 +2,7 @@
 
 #include <iostream>
 
-inline void println(const std::string &X)
-{
+inline void println(const std::string &X) {
 	std::cout << X << std::endl;
 }
 

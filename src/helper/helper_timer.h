@@ -25,8 +25,7 @@
 
 // Definition of the StopWatch Interface, this is used if we don't want to use the CUT functions
 // But rather in a self contained class interface
-class StopWatchInterface
-{
+class StopWatchInterface {
     public:
         StopWatchInterface() {};
         virtual ~StopWatchInterface() {};
@@ -63,8 +62,7 @@ class StopWatchInterface
 #undef max
 
 //! Windows specific implementation of StopWatch
-class StopWatchWin : public StopWatchInterface
-{
+class StopWatchWin : public StopWatchInterface {
     public:
         //! Constructor, default
         StopWatchWin() :
@@ -144,8 +142,7 @@ class StopWatchWin : public StopWatchInterface
 //! Start time measurement
 ////////////////////////////////////////////////////////////////////////////////
 inline void
-StopWatchWin::start()
-{
+StopWatchWin::start() {
     QueryPerformanceCounter((LARGE_INTEGER *) &start_time);
     running = true;
 }
@@ -155,8 +152,7 @@ StopWatchWin::start()
 //! variable. Also increment the number of times this clock has been run.
 ////////////////////////////////////////////////////////////////////////////////
 inline void
-StopWatchWin::stop()
-{
+StopWatchWin::stop() {
     QueryPerformanceCounter((LARGE_INTEGER *) &end_time);
     diff_time = (float)
                 (((double) end_time.QuadPart - (double) start_time.QuadPart) / freq);
@@ -171,8 +167,7 @@ StopWatchWin::stop()
 //! recapture this point in time as the current start time if it is running.
 ////////////////////////////////////////////////////////////////////////////////
 inline void
-StopWatchWin::reset()
-{
+StopWatchWin::reset() {
     diff_time = 0;
     total_time = 0;
     clock_sessions = 0;
@@ -191,8 +186,7 @@ StopWatchWin::reset()
 //! is returned.
 ////////////////////////////////////////////////////////////////////////////////
 inline float
-StopWatchWin::getTime()
-{
+StopWatchWin::getTime() {
     // Return the TOTAL time to date
     float retval = total_time;
 
@@ -212,8 +206,7 @@ StopWatchWin::getTime()
 //! and the total time.
 ////////////////////////////////////////////////////////////////////////////////
 inline float
-StopWatchWin::getAverageTime()
-{
+StopWatchWin::getAverageTime() {
     return (clock_sessions > 0) ? (total_time/clock_sessions) : 0.0f;
 }
 #else
@@ -223,8 +216,7 @@ StopWatchWin::getAverageTime()
 #include <sys/time.h>
 
 //! Windows specific implementation of StopWatch
-class StopWatchLinux : public StopWatchInterface
-{
+class StopWatchLinux : public StopWatchInterface {
     public:
         //! Constructor, default
         StopWatchLinux() :
@@ -289,8 +281,7 @@ class StopWatchLinux : public StopWatchInterface
 //! Start time measurement
 ////////////////////////////////////////////////////////////////////////////////
 inline void
-StopWatchLinux::start()
-{
+StopWatchLinux::start() {
     gettimeofday(&start_time, 0);
     running = true;
 }
@@ -300,8 +291,7 @@ StopWatchLinux::start()
 //! variable. Also increment the number of times this clock has been run.
 ////////////////////////////////////////////////////////////////////////////////
 inline void
-StopWatchLinux::stop()
-{
+StopWatchLinux::stop() {
     diff_time = getDiffTime();
     total_time += diff_time;
     running = false;
@@ -313,8 +303,7 @@ StopWatchLinux::stop()
 //! recapture this point in time as the current start time if it is running.
 ////////////////////////////////////////////////////////////////////////////////
 inline void
-StopWatchLinux::reset()
-{
+StopWatchLinux::reset() {
     diff_time = 0;
     total_time = 0;
     clock_sessions = 0;
@@ -332,8 +321,7 @@ StopWatchLinux::reset()
 //! is returned.
 ////////////////////////////////////////////////////////////////////////////////
 inline float
-StopWatchLinux::getTime()
-{
+StopWatchLinux::getTime() {
     // Return the TOTAL time to date
     float retval = total_time;
 
@@ -350,16 +338,14 @@ StopWatchLinux::getTime()
 //! and the total time.
 ////////////////////////////////////////////////////////////////////////////////
 inline float
-StopWatchLinux::getAverageTime()
-{
+StopWatchLinux::getAverageTime() {
     return (clock_sessions > 0) ? (total_time/clock_sessions) : 0.0f;
 }
 ////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
 inline float
-StopWatchLinux::getDiffTime()
-{
+StopWatchLinux::getDiffTime() {
     struct timeval t_time;
     gettimeofday(&t_time, 0);
 
@@ -378,8 +364,7 @@ StopWatchLinux::getDiffTime()
 //! @param  name of the new timer, 0 if the creation failed
 ////////////////////////////////////////////////////////////////////////////////
 inline bool
-sdkCreateTimer(StopWatchInterface **timer_interface)
-{
+sdkCreateTimer(StopWatchInterface **timer_interface) {
     //printf("sdkCreateTimer called object %08x\n", (void *)*timer_interface);
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
     *timer_interface = (StopWatchInterface *)new StopWatchWin();
@@ -396,8 +381,7 @@ sdkCreateTimer(StopWatchInterface **timer_interface)
 //! @param  name of the timer to delete
 ////////////////////////////////////////////////////////////////////////////////
 inline bool
-sdkDeleteTimer(StopWatchInterface **timer_interface)
-{
+sdkDeleteTimer(StopWatchInterface **timer_interface) {
     //printf("sdkDeleteTimer called object %08x\n", (void *)*timer_interface);
     if (*timer_interface)
     {
@@ -413,8 +397,7 @@ sdkDeleteTimer(StopWatchInterface **timer_interface)
 //! @param name  name of the timer to start
 ////////////////////////////////////////////////////////////////////////////////
 inline bool
-sdkStartTimer(StopWatchInterface **timer_interface)
-{
+sdkStartTimer(StopWatchInterface **timer_interface) {
     //printf("sdkStartTimer called object %08x\n", (void *)*timer_interface);
     if (*timer_interface)
     {
@@ -429,8 +412,7 @@ sdkStartTimer(StopWatchInterface **timer_interface)
 //! @param name  name of the timer to stop
 ////////////////////////////////////////////////////////////////////////////////
 inline bool
-sdkStopTimer(StopWatchInterface **timer_interface)
-{
+sdkStopTimer(StopWatchInterface **timer_interface) {
     // printf("sdkStopTimer called object %08x\n", (void *)*timer_interface);
     if (*timer_interface)
     {
@@ -445,8 +427,7 @@ sdkStopTimer(StopWatchInterface **timer_interface)
 //! @param name  name of the timer to reset.
 ////////////////////////////////////////////////////////////////////////////////
 inline bool
-sdkResetTimer(StopWatchInterface **timer_interface)
-{
+sdkResetTimer(StopWatchInterface **timer_interface) {
     // printf("sdkResetTimer called object %08x\n", (void *)*timer_interface);
     if (*timer_interface)
     {
@@ -464,8 +445,7 @@ sdkResetTimer(StopWatchInterface **timer_interface)
 //! @param name  name of the timer to return the time of
 ////////////////////////////////////////////////////////////////////////////////
 inline float
-sdkGetAverageTimerValue(StopWatchInterface **timer_interface)
-{
+sdkGetAverageTimerValue(StopWatchInterface **timer_interface) {
     //  printf("sdkGetAverageTimerValue called object %08x\n", (void *)*timer_interface);
     if (*timer_interface)
     {
@@ -483,8 +463,7 @@ sdkGetAverageTimerValue(StopWatchInterface **timer_interface)
 //! @param name  name of the timer to obtain the value of.
 ////////////////////////////////////////////////////////////////////////////////
 inline float
-sdkGetTimerValue(StopWatchInterface **timer_interface)
-{
+sdkGetTimerValue(StopWatchInterface **timer_interface) {
     // printf("sdkGetTimerValue called object %08x\n", (void *)*timer_interface);
     if (*timer_interface)
     {

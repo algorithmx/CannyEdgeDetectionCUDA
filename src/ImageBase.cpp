@@ -12,8 +12,7 @@ ImageBase<_NCH,M>::ImageBase(int H, int W, int header_size) :
 	_IMG(NULL),
 	_HEADER(NULL), 
 	__content_loaded(false),
-	__in_operation(false)
-{
+	__in_operation(false) {
 	_IMG = new M(_SIZE_IMG);
 	if (_SIZE_HEADER > 0)
 		_HEADER = new CPU(_SIZE_HEADER);
@@ -26,8 +25,7 @@ ImageBase<_NCH,M>::ImageBase(ImageBase<_NCH,M> const& Img) :
 	_SIZE_IMG(Img.get_IMAGE_SIZE()),
 	_SIZE_HEADER(Img.get_HEADER_SIZE()),
 	__content_loaded(false),
-	__in_operation(false)
-{
+	__in_operation(false) {
 	if (_IMG) { delete _IMG; }
 	if (_SIZE_HEADER) { delete _HEADER; }
 	_IMG = new M(*(Img._IMG));
@@ -38,8 +36,7 @@ ImageBase<_NCH,M>::ImageBase(ImageBase<_NCH,M> const& Img) :
 
 
 template <int _NCH, class M>
-ImageBase<_NCH,M>& ImageBase<_NCH,M>::operator=(ImageBase<_NCH,M> const& Img)
-{
+ImageBase<_NCH,M>& ImageBase<_NCH,M>::operator=(ImageBase<_NCH,M> const& Img) {
 	if (this == &Img) { return *this; }
 	// the copy constructor repeats here
 	if (_IMG) { delete _IMG; }
@@ -61,18 +58,15 @@ ImageBase<_NCH,M>& ImageBase<_NCH,M>::operator=(ImageBase<_NCH,M> const& Img)
 
 template <int _NCH, class M>
 template <int _NCH1, class M1> 
-bool ImageBase<_NCH,M>::compare_to(ImageBase<_NCH1,M1> &Img)
-{
+bool ImageBase<_NCH,M>::compare_to(ImageBase<_NCH1,M1> &Img) {
 	if (_NCH1 != _NCH || Img.get_IMAGE_SIZE() != get_IMAGE_SIZE())
 		return false;
 
 	char *TMP = _mem_alloc_char<char>(Img.get_IMAGE_SIZE());
 	Img.sync(false); // download
 	Img.CopyOut(TMP);
-	for (int p=0; p<_SIZE_IMG; p++)
-	{
-		if (_IMG->get_byte_unsafe(p) != TMP[p])
-		{
+	for (int p=0; p<_SIZE_IMG; p++) {
+		if (_IMG->get_byte_unsafe(p) != TMP[p]) {
 			_mem_free_char<char>(TMP);
 			return false;
 		}
@@ -85,8 +79,7 @@ bool ImageBase<_NCH,M>::compare_to(ImageBase<_NCH1,M1> &Img)
 
 template <int _NCH, class M>
 template <class MX>
-void ImageBase<_NCH,M>::convert_from_mono(ImageBase<1,MX> & MonoImg, int to_channel)
-{
+void ImageBase<_NCH,M>::convert_from_mono(ImageBase<1,MX> & MonoImg, int to_channel) {
 	assert ((to_channel>=0 && to_channel<_NCH)) ;
 	assert ((MonoImg.get_H()==get_H() && MonoImg.get_W()==get_W())) ;
 
@@ -108,8 +101,7 @@ void ImageBase<_NCH,M>::convert_from_mono(ImageBase<1,MX> & MonoImg, int to_chan
 
 template <int _NCH, class M>
 template <class MX>
-void ImageBase<_NCH,M>::convert_from_mono_to_all_channels(ImageBase<1,MX> & MonoImg)
-{
+void ImageBase<_NCH,M>::convert_from_mono_to_all_channels(ImageBase<1,MX> & MonoImg) {
 	assert ((MonoImg.get_H()==get_H() && MonoImg.get_W()==get_W())) ;
 
 	char *A1 = _mem_alloc_char<char>(MonoImg.get_IMAGE_SIZE());
@@ -130,8 +122,7 @@ void ImageBase<_NCH,M>::convert_from_mono_to_all_channels(ImageBase<1,MX> & Mono
 }
 
 template <int _NCH, class M>
-void ImageBase<_NCH,M>::to_bmp(const std::string & outfile)
-{
+void ImageBase<_NCH,M>::to_bmp(const std::string & outfile) {
 	assert (__content_loaded);
 	auto fig = BMP(_W, _H);
 	char * tmp = _mem_alloc_char<char>(_SIZE_IMG);
@@ -144,8 +135,7 @@ void ImageBase<_NCH,M>::to_bmp(const std::string & outfile)
 }
 
 template <int _NCH, class M>
-void ImageBase<_NCH,M>::to_bmp_one_channel(const std::string & outfile, int ch)
-{
+void ImageBase<_NCH,M>::to_bmp_one_channel(const std::string & outfile, int ch) {
 	assert (__content_loaded);
 	if ((ch < 0) || (ch > 2)) { return; } // 3 channels at most
 	auto fig = BMP(_W, _H);
@@ -164,8 +154,7 @@ template <typename INTERPRETE_BYTE_AS>
 void ImageBase<_NCH,M>::to_text_file(
 	const std::string & outfile, 
 	const std::string & header_line
-)
-{
+) {
 	/***
 	 * FILE FORMAT:
 	 * FILTER_NAME
@@ -183,21 +172,17 @@ void ImageBase<_NCH,M>::to_text_file(
 	 * (repeat ...)
 	 */
 	std::ofstream fstrm(outfile.c_str(), std::ios::trunc);
-	if (!fstrm)
-	{
+	if (!fstrm) {
 		errorln("Cannot create file! file name = ", outfile);
 		fstrm.close() ;
 		return;
 	}
 	fstrm << header_line << std::endl;
 	fstrm << get_H() << " " << get_W() << " " << _NCH << std::endl;
-	for (int ich=0; ich<_NCH; ich++)
-	{
+	for (int ich=0; ich<_NCH; ich++) {
 		fstrm << ich << std::endl;
-		for (int y=0; y<_H; y++)
-		{
-			for (int x=0; x<_W; x++)
-			{
+		for (int y=0; y<_H; y++) {
+			for (int x=0; x<_W; x++) {
 				fstrm << static_cast<int>(static_cast<INTERPRETE_BYTE_AS>(get_pixel(x, y, ich))) << " ";
 			}
 			fstrm << std::endl;

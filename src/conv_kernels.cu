@@ -51,11 +51,9 @@ __host__  void conv_N_channel_interleaving_to_N_channel_filter_CPU_all_channels(
 	int img_linear_pos_N;                      // pixel linear index * Nchannels
 	int p;
 
-	for (int i = 0; i < Hi; i++)
-	{
+	for (int i = 0; i < Hi; i++) {
 		i__x__Wi = i * Wi;
-		for (int j = 0; j < Wi; j++)
-		{
+		for (int j = 0; j < Wi; j++) {
 			///////////////////////
 			//  PIXEL OPERATION  //
 			///////////////////////
@@ -68,15 +66,13 @@ __host__  void conv_N_channel_interleaving_to_N_channel_filter_CPU_all_channels(
 			minl_N = max2(0, cx-j) * Nchannels;
 
 			// apply filter channelwise
-			for (int ich = 0; ich < Nchannels; ich++)
-			{
+			for (int ich = 0; ich < Nchannels; ich++) {
 				p = img_linear_pos_N + ich;
 
 				// weighted average over all filter elements
 				// zero-padding, same-size
 				sum = 0;
-				for (int k_N = mink_N; k_N < maxk_N; k_N += Nchannels)
-				{
+				for (int k_N = mink_N; k_N < maxk_N; k_N += Nchannels) {
 					k__x__Wf_N = k_N * Wf ;
 					for (int l_N = minl_N; l_N < maxl_N; l_N += Nchannels)
 					{
@@ -138,12 +134,10 @@ __global__  void conv_N_channel_interleaving_to_N_channel_filter_GPU_all_channel
 	// zero-padding, same-size
 	int k__x__Wf_N, k__x__Wi_N;
 	int sum = 0;
-	for (int k_N = mink_N; k_N < maxk_N; k_N += Nchannels)
-	{
+	for (int k_N = mink_N; k_N < maxk_N; k_N += Nchannels) {
 		k__x__Wf_N = k_N * Wf ;
 		k__x__Wi_N = k_N * Wi ;
-		for (int l_N = minl_N; l_N < maxl_N; l_N += Nchannels)
-		{
+		for (int l_N = minl_N; l_N < maxl_N; l_N += Nchannels) {
 			sum += ( 
 				static_cast<int>(    filter[ (k__x__Wf_N + l_N) + ich        ])\
 			  * cu_char_uchar_int(image_src[ (k__x__Wi_N + l_N) + pli_sub_c_N])
@@ -165,13 +159,11 @@ __global__  void conv_N_channel_interleaving_to_N_channel_filter_GPU_all_channel
 typedef char (*pfunc_sobel)(char, char); 
 // tried to use function pointer, GPU code not successful, CPU code ok
 
-char rgb_sobel_amp(char Ix, char Iy)
-{
+char rgb_sobel_amp(char Ix, char Iy) {
 	return static_cast<char>(floorf(sqrtf(0.4999f*(sqf(Ix) + sqf(Iy)))));
 }
 
-char rgb_sobel_dir(char Ix, char Iy)
-{
+char rgb_sobel_dir(char Ix, char Iy) {
 	// 20.37183 = 128 / (2*math.pi)
 	return static_cast<char>(floorf(atan2f(Iy,Ix) * 40.74367f));
 }
@@ -183,18 +175,14 @@ __host__  void inplace_merge_pixelwise_CPU_all_channels(
 	int Nchannels,
 	pfunc_sobel op,
 	int Hi, int Wi 
-)
-{
+) {
 	int i__x__Wi;          // tmp vars
 	int img_linear_pos_N;  // pixel linear index * num_channels
-	for (int i = 0; i < Hi; i++) 
-	{
+	for (int i = 0; i < Hi; i++)  {
 		i__x__Wi = i * Wi;
-		for (int j = 0; j < Wi; j++) 
-		{
+		for (int j = 0; j < Wi; j++)  {
 			img_linear_pos_N = (i__x__Wi + j) * Nchannels;
-			for (int ich = 0; ich < Nchannels; ich++) 
-			{
+			for (int ich = 0; ich < Nchannels; ich++) {
 				image_dst[img_linear_pos_N+ich] = \
 					op(image_dst[img_linear_pos_N+ich], 
 					   image_src[img_linear_pos_N+ich]);
@@ -207,14 +195,12 @@ __host__  void inplace_merge_pixelwise_CPU_all_channels(
 // SOBEL GPU CODE
 
 // calculate sqrt(Ix^2 + Iy^2) (always non-negative)
-__device__ char cu_rgb_sobel_amp(char Ix, char Iy)
-{
+__device__ char cu_rgb_sobel_amp(char Ix, char Iy) {
 	return cu_uint_uchar_char(__float2uint_rd(__fsqrt_rd((sqf(Ix) + sqf(Iy)))));
 }
 
 // calculate arctan(Ix, Iy) (range (-pi, pi] )
-__device__ char cu_rgb_sobel_dir(char Ix, char Iy)
-{
+__device__ char cu_rgb_sobel_dir(char Ix, char Iy) {
 	// rescale factor 20.37183 = 128 / (2*math.pi)
 	return static_cast<char>(__float2int_rd( atan2f(Iy,Ix) * 40.74367f));
 }
@@ -225,8 +211,7 @@ __global__  void inplace_merge_pixelwise_GPU_all_channels_amp(
 	int mem_index_size,
 	int Nchannels,
 	int Hi, int Wi
-)
-{
+) {
 	int ich = threadIdx.z;
 	if (ich >= Nchannels) { return; }
 	int i = blockDim.x * blockIdx.x + threadIdx.x ;
@@ -245,8 +230,7 @@ __global__  void inplace_merge_pixelwise_GPU_all_channels_dir(
 	int mem_index_size,
 	int Nchannels,
 	int Hi, int Wi
-)
-{
+) {
 	int ich = threadIdx.z;
 	if (ich >= Nchannels) { return; }
 	int i = blockDim.x * blockIdx.x + threadIdx.x ;
@@ -261,15 +245,13 @@ __global__  void inplace_merge_pixelwise_GPU_all_channels_dir(
 
 
 // shift-x to eight neighbors
-__device__ int cu_dir2dx(char direction)
-{ 
+__device__ int cu_dir2dx(char direction) { 
 	return (cabs(direction) < 48 ? +1 : (cabs(direction) >= 80 ? -1 : 0)); 
 }
 
 
 // shift-y to eight neighbors
-__device__ int cu_dir2dy(char direction)
-{
+__device__ int cu_dir2dy(char direction) {
 	return ((direction >= 16 && direction < 112)  \
 				? +1 \
 				: ((direction <= -16 && direction > -112)  \
@@ -283,8 +265,7 @@ __global__  void inplace_merge_pixelwise_GPU_all_channels_non_maximal_suppressio
 	int mem_index_size,
 	int Nchannels,
 	int Hi, int Wi
-)
-{
+) {
 	// index
 	int ich = threadIdx.z;
 	if (ich >= Nchannels) { return; }
@@ -294,8 +275,7 @@ __global__  void inplace_merge_pixelwise_GPU_all_channels_non_maximal_suppressio
 	if (j >= Wi) { return; } // exclude edge pixels
 
 	int  p  = (i * Wi + j) * Nchannels + ich;
-	if (i==Hi-1 || i==0 || j==0 || j==Wi-1) 
-	{
+	if (i==Hi-1 || i==0 || j==0 || j==Wi-1)  {
 		amp[p] = char(0); // suppress the image border
 		return ;
 	}
@@ -313,8 +293,7 @@ __device__ unsigned char cu_rescale(
 	unsigned char c, 
 	unsigned char cmin, 
 	unsigned char cmax
-)
-{
+) {
 	return static_cast<unsigned char>(
 					256u * static_cast<unsigned int>(max2(min2(cmax,c),cmin)-cmin) \
 				  / static_cast<unsigned int>(cmax-cmin+1)
@@ -330,8 +309,7 @@ __global__  void inplace_pixelwise_GPU_all_channels_rescale(
 	unsigned char green_min, unsigned char green_max, 
 	unsigned char blue_min,  unsigned char blue_max, 
 	int Hi, int Wi
-)
-{
+) {
 	// index
 	int ich = threadIdx.z;
 	if (ich >= Nchannels) { return; }
@@ -341,18 +319,18 @@ __global__  void inplace_pixelwise_GPU_all_channels_rescale(
 	if (j >= Wi) { return; } // exclude edge pixels
 
 	int  p  = (i * Wi + j) * Nchannels + ich;
-	if (ich==0) // red
-	{
+	if (ich==0)  {
+		// red
 		img[p] = cu_rescale(static_cast<unsigned char>(img[p]), red_min, red_max);
 	} 
 	else 
-	if (ich==1)  // green
-	{
+	if (ich==1) {
+		// green 
 		img[p] = cu_rescale(static_cast<unsigned char>(img[p]), green_min, green_max);
 	}
 	else
-	if (ich==2) // blue
-	{
+	if (ich==2) {
+		// blue
 		img[p] = cu_rescale(static_cast<unsigned char>(img[p]), blue_min,  blue_max);
 	}
 }
@@ -366,8 +344,7 @@ __global__  void pixelwise_GPU_all_channels_Hysteresis_Thresholding(
 	unsigned char green_low, unsigned char green_high, 
 	unsigned char blue_low,  unsigned char blue_high, 
 	int Hi, int Wi
-)
-{
+) {
 	// index
 	int ich = threadIdx.z;
 	if (ich >= Nchannels) { return; }
@@ -377,8 +354,7 @@ __global__  void pixelwise_GPU_all_channels_Hysteresis_Thresholding(
 	if (j >= Wi) { return; } // exclude edge pixels
 
 	int  p   = (i * Wi + j) * Nchannels + ich;
-	if (i==Hi-1 || i==0 || j==0 || j==Wi-1)
-	{
+	if (i==Hi-1 || i==0 || j==0 || j==Wi-1) {
 		outp[p] = char(0); // mute the image border  
 		return ;
 	}
@@ -388,20 +364,16 @@ __global__  void pixelwise_GPU_all_channels_Hysteresis_Thresholding(
 	int Ny = Nchannels * Wi;
 	char CH_MAX = cu_uint_uchar_char(255u);
 	// double thresholding
-	if (ich==0) // red
-	{
-		if (img[p] > red_high) 
-		{
+	if (ich==0) {
+		// red 
+		if (img[p] > red_high)  {
 			// point-p is a strong point
 			outp[p] = CH_MAX;
 		}
 		else
-		if (img[p] >= red_low) 
-		{
-			for (int ix=-Nx; ix<=Nx; ix+=Nx)
-			{
-				for (int iy=-Ny; iy<=Ny; iy+=Ny)
-				{
+		if (img[p] >= red_low)  {
+			for (int ix=-Nx; ix<=Nx; ix+=Nx) {
+				for (int iy=-Ny; iy<=Ny; iy+=Ny) {
 					if (iy==0 && iy==0) 
 						continue;
 					if (img[p+ix+iy] > red_high)
@@ -415,21 +387,17 @@ __global__  void pixelwise_GPU_all_channels_Hysteresis_Thresholding(
 		}
 	}
 	else
-	if (ich==1)  // green
-	{
+	if (ich==1) {
+		// green
 		// repeats the red code
-		if (img[p] > green_high)
-		{
+		if (img[p] > green_high) {
 			// point-p is a strong point
 			outp[p] = CH_MAX;
 		}
 		else
-		if (img[p] >= green_low)
-		{
-			for (int ix=-Nx; ix<=Nx; ix+=Nx)
-			{
-				for (int iy=-Ny; iy<=Ny; iy+=Ny)
-				{
+		if (img[p] >= green_low) {
+			for (int ix=-Nx; ix<=Nx; ix+=Nx) {
+				for (int iy=-Ny; iy<=Ny; iy+=Ny) {
 					if (iy==0 && iy==0) 
 						continue;
 					if (img[p+ix+iy] > green_high)
@@ -443,20 +411,16 @@ __global__  void pixelwise_GPU_all_channels_Hysteresis_Thresholding(
 		}
 	}
 	else
-	if (ich==2) // blue
-	{
-		if (img[p] > blue_high)
-		{
+	if (ich==2) {
+		// blue
+		if (img[p] > blue_high) {
 			// point-p is a strong point
 			outp[p] = CH_MAX;
 		}
 		else
-		if (img[p] >= blue_low)
-		{
-			for (int ix=-Nx; ix<=Nx; ix+=Nx)
-			{
-				for (int iy=-Ny; iy<=Ny; iy+=Ny)
-				{
+		if (img[p] >= blue_low) {
+			for (int ix=-Nx; ix<=Nx; ix+=Nx) {
+				for (int iy=-Ny; iy<=Ny; iy+=Ny) {
 					if (iy==0 && iy==0) 
 						continue;
 					if (img[p+ix+iy] > blue_high)

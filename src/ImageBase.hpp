@@ -19,8 +19,7 @@
 
 inline int __interleaving_multichannel_array_index_x_width_fast__(
 	int X, int Y, int W, int N, int c
-)
-{
+) {
 	return (c+N*(Y*W+X));
 }
 
@@ -31,8 +30,7 @@ inline int __interleaving_multichannel_array_index_x_width_fast__(
 // 3. Overwrite to_pos(x0, y0, ch) if necessary
 // 4. Overwrite the constructor and destructor if necessary
 template <int _NCH, class M>
-class ImageBase
-{
+class ImageBase {
 	public: 
 
 		ImageBase () = delete ; // prevent undefined behavior
@@ -45,20 +43,17 @@ class ImageBase
 
 		ImageBase<_NCH,M> &operator=(ImageBase<_NCH,M> const& Img);
 
-		virtual ~ImageBase()
-		{
+		virtual ~ImageBase() {
 			delete _IMG; 
 			if (_HEADER) { delete _HEADER; };
 		}
 
 		// utilities
-		bool in_box(int x0, int y0, int ch) const
-		{
+		bool in_box(int x0, int y0, int ch) const {
 			return (x0<_W || y0<_H || x0>=0 || y0>=0 || ch>=0 || ch<_NCH);
 		}
 
-		int  to_pos(int x0, int y0, int ch) const 
-		{ 
+		int  to_pos(int x0, int y0, int ch) const  { 
 			// for interleaving
 			return __interleaving_multichannel_array_index_x_width_fast__(x0,y0,_W,_NCH,ch);
 		}
@@ -71,44 +66,37 @@ class ImageBase
 
 		int  get_IMAGE_SIZE(void) const { return _SIZE_IMG; }
 
-		char get_header_char(int pos) const
-		{
+		char get_header_char(int pos) const {
 			assert (__content_loaded); 
 			return _HEADER->get_byte(pos); 
 		}
 
 		bool is_empty(void) { return !__content_loaded; }
 
-		char get_header_char_unsafe(int pos) const
-		{
+		char get_header_char_unsafe(int pos) const {
 			return _HEADER->get_byte_unsafe(pos);
 		}
 
-		char get_pixel(int x0, int y0, int ch) const
-		{
+		char get_pixel(int x0, int y0, int ch) const {
 			assert (__content_loaded && _IMG != NULL); 
-			return (in_box(x0,y0,ch) ? get_pixel_unsafe(x0, y0, ch) : int_char(0)); 
+			return (in_box(x0,y0,ch) ? get_pixel_unsafe(x0, y0, ch) : char(0u)); 
 		}
 
-		char get_pixel_unsafe(int x0, int y0, int ch) const
-		{
+		char get_pixel_unsafe(int x0, int y0, int ch) const {
 			return _IMG->get_byte_unsafe(to_pos(x0,y0,ch));
 		}
 
-		void set_pixel(int x0, int y0, int ch, char VAL)
-		{
+		void set_pixel(int x0, int y0, int ch, char VAL) {
 			assert (_IMG != NULL); 
 			if (in_box(x0,y0,ch))
 				set_pixel_unsafe(x0, y0, ch, VAL);
 		}
 
-		void set_pixel_unsafe(int x0, int y0, int ch, char VAL)
-		{
+		void set_pixel_unsafe(int x0, int y0, int ch, char VAL) {
 			_IMG->set_byte_unsafe(to_pos(x0,y0,ch), VAL);
 		}
 
-		void set_val(char VAL)
-		{
+		void set_val(char VAL) {
 			for (int i=0; i<_SIZE_IMG; ++i)
 				_IMG->set_byte_unsafe(i,VAL); 
 		}
@@ -155,8 +143,7 @@ class ImageBase
 
 		std::atomic<bool> __in_operation = false;
 
-		void _lock(void)
-		{
+		void _lock(void) {
 			while ( __in_operation )
 				wait();
 			__in_operation = true ; 
