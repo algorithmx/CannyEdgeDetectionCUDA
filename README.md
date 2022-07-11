@@ -78,20 +78,20 @@ In case that the link to the Boost library fails, check the `BOOST_FLAGS` in `Ma
 ### `CannyStepVHP()` function 
 
 This function summarizes the major steps of the Canny edge detection algorithm:
-+ Apply the Gaussian filter  
++ Apply the Gaussian filter   
   Line 59, 78 in `src/CannyStepVHP.cu` :  `apply_filter_GPU( GF ...)`
-+ Apply the Sobel filters  
++ Apply the Sobel filters   
   Line 67 in `src/CannyStepVHP.cu` :  `apply_filter_GPU( SBX ...)`
   Line 79 in `src/CannyStepVHP.cu` :  `apply_filter_GPU( SBY ...)`
-+ Compute the amplitude of gradient as $\sqrt{I_x^2+I_y^2}$, where $I_x$ and $I_y$ are the results after the Sobel filter.
++ Compute the amplitude of gradient as $\sqrt{I_x^2+I_y^2}$, where $I_x$ and $I_y$ are the results after the Sobel filter.   
   Line 87 in `src/CannyStepVHP.cu` :  `calculate_gradient_amplitude_GPU( ...)`
-+ Compute the direction of gradient as $\arctan(I_y/I_x)$, where $I_x$ and $I_y$ are the results after the Sobel filter.
++ Compute the direction of gradient as $\arctan(I_y/I_x)$, where $I_x$ and $I_y$ are the results after the Sobel filter.   
   Line 95 in `src/CannyStepVHP.cu` :  `calculate_gradient_direction_GPU( ...)`
-+ Suppress the non maximal pixels in the amplitude of gradient.
++ Suppress the non maximal pixels in the amplitude of gradient.   
   Line 103 in `src/CannyStepVHP.cu` :  `non_maximal_suppression_GPU( ...)`
-+ Rescale the gradient amplitude to enhance the contrast in the regions of interest.
++ Rescale the gradient amplitude to enhance the contrast in the regions of interest.   
   Line 111 in `src/CannyStepVHP.cu` :  `rescaling_GPU( ...)`
-+ Hysteresis edge tracking.
++ Hysteresis edge tracking.   
   Line 119 in `src/CannyStepVHP.cu` :  `double_threshold_GPU( ...)`
 
 
