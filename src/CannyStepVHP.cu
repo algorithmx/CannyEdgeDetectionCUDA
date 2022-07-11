@@ -150,6 +150,11 @@ void print_help(char * program_name) {
 std::tuple<std::string, int, double, unsigned int, unsigned int, unsigned int, bool> 
 parseCommandLine(int argc, char *argv[]) {
 	std::string FN(argv[1]);
+	if (FN.compare("-h") == 0) {
+		print_help(argv[0]);
+		exit(0);
+	}
+
 	int gaussian_filter_size = 11; 
 	double gaussian_filter_sigma = 5.0;
 	unsigned int cutoff = 64u;

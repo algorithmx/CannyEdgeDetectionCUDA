@@ -1,0 +1,1154 @@
+Script started on 2022-07-11 10:46:49+08:00 [TERM="xterm-256color" TTY="/dev/pts/4" COLUMNS="80" LINES="24"]
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA[01;32mdabajabaza@XXXX[00m:[01;34m/DATA[00m$ cp /home/dabajabaza/jianguoyun/Nutstore/CUDA_courses/course3_project/ .[C[C[C[A(base) ]0;dabajabaza@XXXX: /DATA[01;32mdabajabaza@XXXX[00m:[01;34m/DATA[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C /home/dabajabaza/jianguoyun/Nutstore/CUDA_cours[1@e[A(base) ]0;dabajabaza@XXXX: /DATA[01;32mdabajabaza@XXXX[00m:[01;34m/DATA[00m$ [C[C[C- /home/dabajabaza/jianguoyun/Nutstore/CUDA_cour[1@s[A(base) ]0;dabajabaza@XXXX: /DATA[01;32mdabajabaza@XXXX[00m:[01;34m/DATA[00m$ [C[C[C[Cr /home/dabajabaza/jianguoyun/Nutstore/CUDA_cou[1@r[A(base) ]0;dabajabaza@XXXX: /DATA[01;32mdabajabaza@XXXX[00m:[01;34m/DATA[00m$ [C[C[C[C[Cf /home/dabajabaza/jianguoyun/Nutstore/CUDA_co[1@u[A(base) ]0;dabajabaza@XXXX: /DATA[01;32mdabajabaza@XXXX[00m:[01;34m/DATA[00m$ [C[C[C[C[C[C
+
+[?2004l[?2004h(base) ]0;dabajabaza@XXXX: /DATA[01;32mdabajabaza@XXXX[00m:[01;34m/DATA[00m$ cd course3_project/
+[?2004l[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ ls
+[?2004l [0m[01;34mbin[0m                             INSTALL    README.md
+"C++ Dos and Don'ts.pdf"         [01;34mlib[0m        [01;34mreferences[0m
+'Chromium C++ style guide.pdf'   LICENSE    run.sh
+ [01;34mdata[0m                            Makefile   [01;34msample[0m
+'Google C++ Style Guide.pdf'     [01;34mproof[0m      [01;34msrc[0m
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ make clean
+[?2004lrm -rf  ./bin/*.exe  *.bmp   *.fltr   *.txt   /tmp/*.o   ./data/*.bmp   ./data/*.xy   ./data/*.txt
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ make all
+[?2004lrm -rf  ./bin/*.exe  *.bmp   *.fltr   *.txt   /tmp/*.o   ./data/*.bmp   ./data/*.xy   ./data/*.txt
+nvcc --std c++17 -O3 -lineinfo ./src/CannyStepVHP.cu -o ./bin/CannyStepVHP.exe -I -I/usr/lib -I/usr/include/boost -lboost_iostreams -lboost_system -lboost_thread -lboost_timer -lboost_chrono -I/usr/local/cuda/include -I/usr/local/cuda/lib64  -lcuda -lcudart 
+nvcc --std c++17 -O3 -lineinfo ./src/test.cu -o ./bin/test.exe -I -I/usr/lib -I/usr/include/boost -lboost_iostreams -lboost_system -lboost_thread -lboost_timer -lboost_chrono -I/usr/local/cuda/include -I/usr/local/cuda/lib64  -lcuda -lcudart 
+./bin/test.exe
+*** test_Mem() started.
+GPU :
+GPU pinned :
+CPU pageable :
+CPU pinned :
+GPU stream :
+*** test_Mem() is successful.
+
+
+*** test_IO() started.
+*** test_IO() is successful.
+
+
+*** test_gaussian_filter_CPU() started.
+processing ./data/1011.rgb.gz
+    Timing : RGB_VHP::_load()  : 295 milliseconds
+launching apply_filter_CPU() ... 
+    Timing : total  : 5398 milliseconds
+processing ./data/1012.rgb.gz
+    Timing : RGB_VHP::_load()  : 293 milliseconds
+launching apply_filter_CPU() ... 
+    Timing : total  : 5366 milliseconds
+*** test_gaussian_filter_CPU() is successful.
+
+
+*** test_gaussian_filter_GPU() started.
+processing ./data/1011.rgb.gz
+    Timing : RGB_VHP::_load()  : 302 milliseconds
+    Timing : total  : 842 milliseconds
+processing ./data/1012.rgb.gz
+    Timing : RGB_VHP::_load()  : 304 milliseconds
+    Timing : total  : 773 milliseconds
+*** test_gaussian_filter_GPU() is successful.
+
+
+*** test_sobel_CPU_incomplete() started.
+processing ./data/1011.rgb.gz
+    Timing : RGB_VHP::_load()  : 292 milliseconds
+    Timing : total  : 10130 milliseconds
+processing ./data/1012.rgb.gz
+    Timing : RGB_VHP::_load()  : 294 milliseconds
+    Timing : total  : 10118 milliseconds
+processing ./data/1013.rgb.gz
+    Timing : RGB_VHP::_load()  : 282 milliseconds
+    Timing : total  : 10043 milliseconds
+*** test_sobel_CPU_incomplete() is successful.
+
+
+*** test_sobel_GPU() started.
+processing ./data/1011.rgb.gz
+    Timing : RGB_VHP::_load()  : 301 milliseconds
+    Timing : total  : 1317 milliseconds
+processing ./data/1012.rgb.gz
+    Timing : RGB_VHP::_load()  : 303 milliseconds
+    Timing : total  : 1320 milliseconds
+processing ./data/1013.rgb.gz
+    Timing : RGB_VHP::_load()  : 292 milliseconds
+    Timing : total  : 1310 milliseconds
+*** test_sobel_GPU() is successful.
+
+
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ ls
+[?2004l [0m[01;34mbin[0m             [01;35mbox.G.bmp[0m       "C++ Dos and Don'ts.pdf"         GaussianFilter.uchar.fltr     [01;34mlib[0m        [01;34mproof[0m        run.sh
+ [01;35mbox.B.bmp[0m       [01;35mbox.R.bmp[0m       'Chromium C++ style guide.pdf'  'Google C++ Style Guide.pdf'   LICENSE    README.md    [01;34msample[0m
+ box.char.fltr   box.uchar.fltr   [01;34mdata[0m                            INSTALL                       Makefile   [01;34mreferences[0m   [01;34msrc[0m
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ ls *.bmp
+[?2004l[0m[01;35mbox.B.bmp[0m  [01;35mbox.G.bmp[0m  [01;35mbox.R.bmp[0m
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ ls *.bmp.*.bmp/*.bmpd*.bmpa*.bmpt*.bmpa*.bmp/*.bmp
+[?2004l[0m[01;35m./data/1011.rgb.gz.amp.bmp[0m        [01;35m./data/1011.rgb.gz.R.bmp[0m        [01;35m./data/1012.rgb.gz.gaussian1.bmp[0m  [01;35m./data/1013.rgb.gz.dir.bmp[0m
+[01;35m./data/1011.rgb.gz.B.amp.bmp[0m      [01;35m./data/1011.rgb.gz.R.dir.bmp[0m    [01;35m./data/1012.rgb.gz.gaussian2.bmp[0m  [01;35m./data/1013.rgb.gz.DTH.bmp[0m
+[01;35m./data/1011.rgb.gz.B.bmp[0m          [01;35m./data/1011.rgb.gz.rescale.bmp[0m  [01;35m./data/1012.rgb.gz.G.bmp[0m          [01;35m./data/1013.rgb.gz.G.amp.bmp[0m
+[01;35m./data/1011.rgb.gz.B.dir.bmp[0m      [01;35m./data/1011.rgb.gz.sb1.bmp[0m      [01;35m./data/1012.rgb.gz.G.dir.bmp[0m      [01;35m./data/1013.rgb.gz.gaussian1.bmp[0m
+[01;35m./data/1011.rgb.gz.bmp[0m            [01;35m./data/1011.rgb.gz.sb2.bmp[0m      [01;35m./data/1012.rgb.gz.R.amp.bmp[0m      [01;35m./data/1013.rgb.gz.gaussian2.bmp[0m
+[01;35m./data/1011.rgb.gz.dir.bmp[0m        [01;35m./data/1012.rgb.gz.amp.bmp[0m      [01;35m./data/1012.rgb.gz.R.bmp[0m          [01;35m./data/1013.rgb.gz.G.dir.bmp[0m
+[01;35m./data/1011.rgb.gz.DTH.bmp[0m        [01;35m./data/1012.rgb.gz.B.amp.bmp[0m    [01;35m./data/1012.rgb.gz.R.dir.bmp[0m      [01;35m./data/1013.rgb.gz.R.amp.bmp[0m
+[01;35m./data/1011.rgb.gz.G.amp.bmp[0m      [01;35m./data/1012.rgb.gz.B.bmp[0m        [01;35m./data/1012.rgb.gz.rescale.bmp[0m    [01;35m./data/1013.rgb.gz.R.dir.bmp[0m
+[01;35m./data/1011.rgb.gz.gaussian1.bmp[0m  [01;35m./data/1012.rgb.gz.B.dir.bmp[0m    [01;35m./data/1012.rgb.gz.sb1.bmp[0m        [01;35m./data/1013.rgb.gz.rescale.bmp[0m
+[01;35m./data/1011.rgb.gz.gaussian2.bmp[0m  [01;35m./data/1012.rgb.gz.bmp[0m          [01;35m./data/1012.rgb.gz.sb2.bmp[0m        [01;35m./data/1013.rgb.gz.sb1.bmp[0m
+[01;35m./data/1011.rgb.gz.G.bmp[0m          [01;35m./data/1012.rgb.gz.dir.bmp[0m      [01;35m./data/1013.rgb.gz.amp.bmp[0m        [01;35m./data/1013.rgb.gz.sb2.bmp[0m
+[01;35m./data/1011.rgb.gz.G.dir.bmp[0m      [01;35m./data/1012.rgb.gz.DTH.bmp[0m      [01;35m./data/1013.rgb.gz.B.amp.bmp[0m
+[01;35m./data/1011.rgb.gz.R.amp.bmp[0m      [01;35m./data/1012.rgb.gz.G.amp.bmp[0m    [01;35m./data/1013.rgb.gz.B.dir.bmp[0m
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ make clean[K[K[K[K[K[K[K[K[K[K./bin/[K[K[K[K[K[Kls ./data/*.bmp[7P*.bmp./data/*.bmp[7P*.bmp./data/*.bmp[1P ./data/*.bmp[1P ./data/*.bmpr ./data/*.bmpm ./data/*.bmp
+[?2004l[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ ./bin/CannyStepVHP.exe -h
+[?2004lUsage: ./bin/CannyStepVHP.exe <rgb.gz input file> [options]
+options: 
+-t // in step mode
+-c <rescaling cutoff>
+-l <double threshold lower bound>
+-u <double threshold upper bound>
+-s <initial gaussian filter sigma>
+-n <initial gaussian filter size>
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ ./bin/CannyStepVHP.exe -h[K[K./data/10134[K.rgb.gz 
+[?2004l
+CannyStepVHP() started with file ./data/1013.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 16
+
+    Processing ./data/1013.rgb.gz
+    Timing : RGB_VHP::_load()  : 294 milliseconds
+    Timing : total  : 1198 milliseconds
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ ./bin/CannyStepVHP.exe ./data/1013.rgb.gz -h[K[10Prm ./data/*.bmpls[C[C[C[C[C[C[C[C[C[C[C[C[C
+[?2004l[0m[01;35m./data/1013.rgb.gz.bmp[0m  [01;35m./data/1013.rgb.gz.canny.bmp[0m
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ ls ./data/*.bmp./bin/CannyStepVHP.exe ./data/1013.rgb.gz -h[K[10Prm ./data/*.bmp
+[?2004l[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ rm ./data/*.bmpls[C[C[C[C[C[C[C[C[C[C[C[C[C./bin/CannyStepVHP.exe ./data/1013.rgb.gz -t
+[?2004l
+CannyStepVHP() started with file ./data/1013.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 16
+Step mode.
+
+    Processing ./data/1013.rgb.gz
+    Timing : RGB_VHP::_load()  : 294 milliseconds
+    Timing : total  : 3100 milliseconds
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ ./bin/CannyStepVHP.exe ./data/1013.rgb.gz -t[29Prm ./data/*.bmpls[C[C[C[C[C[C[C[C[C[C[C[C[C
+[?2004l[0m[01;35m./data/1013.rgb.gz.B.doublethreshold.bmp[0m    [01;35m./data/1013.rgb.gz.G.doublethreshold.bmp[0m    [01;35m./data/1013.rgb.gz.R.rescale.bmp[0m
+[01;35m./data/1013.rgb.gz.B.gaussian.bmp[0m           [01;35m./data/1013.rgb.gz.G.gaussian.bmp[0m           [01;35m./data/1013.rgb.gz.R.sobel.amp.bmp[0m
+[01;35m./data/1013.rgb.gz.bmp[0m                      [01;35m./data/1013.rgb.gz.G.rescale.bmp[0m            [01;35m./data/1013.rgb.gz.R.sobel.dir.bmp[0m
+[01;35m./data/1013.rgb.gz.B.rescale.bmp[0m            [01;35m./data/1013.rgb.gz.G.sobel.amp.bmp[0m          [01;35m./data/1013.rgb.gz.R.sobel.suppression.bmp[0m
+[01;35m./data/1013.rgb.gz.B.sobel.amp.bmp[0m          [01;35m./data/1013.rgb.gz.G.sobel.dir.bmp[0m          [01;35m./data/1013.rgb.gz.R.sobel.x.bmp[0m
+[01;35m./data/1013.rgb.gz.B.sobel.dir.bmp[0m          [01;35m./data/1013.rgb.gz.G.sobel.suppression.bmp[0m  [01;35m./data/1013.rgb.gz.R.sobel.y.bmp[0m
+[01;35m./data/1013.rgb.gz.B.sobel.suppression.bmp[0m  [01;35m./data/1013.rgb.gz.G.sobel.x.bmp[0m            [01;35m./data/1013.rgb.gz.sobel.amp.bmp[0m
+[01;35m./data/1013.rgb.gz.B.sobel.x.bmp[0m            [01;35m./data/1013.rgb.gz.G.sobel.y.bmp[0m            [01;35m./data/1013.rgb.gz.sobel.dir.bmp[0m
+[01;35m./data/1013.rgb.gz.B.sobel.y.bmp[0m            [01;35m./data/1013.rgb.gz.R.doublethreshold.bmp[0m    [01;35m./data/1013.rgb.gz.sobel.suppression.bmp[0m
+[01;35m./data/1013.rgb.gz.doublethreshold.bmp[0m      [01;35m./data/1013.rgb.gz.rescale.bmp[0m              [01;35m./data/1013.rgb.gz.sobel.x.bmp[0m
+[01;35m./data/1013.rgb.gz.gaussian.bmp[0m             [01;35m./data/1013.rgb.gz.R.gaussian.bmp[0m           [01;35m./data/1013.rgb.gz.sobel.y.bmp[0m
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ ls ./data/*.bmp[C.bmpR.bmp[C.bmp*.bmp
+[?2004l[0m[01;35m./data/1013.rgb.gz.R.doublethreshold.bmp[0m  [01;35m./data/1013.rgb.gz.R.sobel.amp.bmp[0m          [01;35m./data/1013.rgb.gz.R.sobel.x.bmp[0m
+[01;35m./data/1013.rgb.gz.R.gaussian.bmp[0m         [01;35m./data/1013.rgb.gz.R.sobel.dir.bmp[0m          [01;35m./data/1013.rgb.gz.R.sobel.y.bmp[0m
+[01;35m./data/1013.rgb.gz.R.rescale.bmp[0m          [01;35m./data/1013.rgb.gz.R.sobel.suppression.bmp[0m
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ ls ./data/*.R.*.bmp[1P.*.bmpG.*.bmp
+[?2004l[0m[01;35m./data/1013.rgb.gz.G.doublethreshold.bmp[0m  [01;35m./data/1013.rgb.gz.G.sobel.amp.bmp[0m          [01;35m./data/1013.rgb.gz.G.sobel.x.bmp[0m
+[01;35m./data/1013.rgb.gz.G.gaussian.bmp[0m         [01;35m./data/1013.rgb.gz.G.sobel.dir.bmp[0m          [01;35m./data/1013.rgb.gz.G.sobel.y.bmp[0m
+[01;35m./data/1013.rgb.gz.G.rescale.bmp[0m          [01;35m./data/1013.rgb.gz.G.sobel.suppression.bmp[0m
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ ls ./data/*.G.*.bmp[1P.*.bmpB.*.bmp
+[?2004l[0m[01;35m./data/1013.rgb.gz.B.doublethreshold.bmp[0m  [01;35m./data/1013.rgb.gz.B.sobel.amp.bmp[0m          [01;35m./data/1013.rgb.gz.B.sobel.x.bmp[0m
+[01;35m./data/1013.rgb.gz.B.gaussian.bmp[0m         [01;35m./data/1013.rgb.gz.B.sobel.dir.bmp[0m          [01;35m./data/1013.rgb.gz.B.sobel.y.bmp[0m
+[01;35m./data/1013.rgb.gz.B.rescale.bmp[0m          [01;35m./data/1013.rgb.gz.B.sobel.suppression.bmp[0m
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ ls ./data/*.B.*.bmpG.*.bmpR.*.bmp[4Pbmp./bin/CannyStepVHP.exe ./data/1013.rgb.gz -t[29Prm ./data/*.bmp
+[?2004l[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ make clean
+[?2004lrm -rf  ./bin/*.exe  *.bmp   *.fltr   *.txt   /tmp/*.o   ./data/*.bmp   ./data/*.xy   ./data/*.txt
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ make build-canny 
+[?2004lnvcc --std c++17 -O3 -lineinfo ./src/CannyStepVHP.cu -o ./bin/CannyStepVHP.exe -I -I/usr/lib -I/usr/include/boost -lboost_iostreams -lboost_system -lboost_thread -lboost_timer -lboost_chrono -I/usr/local/cuda/include -I/usr/local/cuda/lib64  -lcuda -lcudart 
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ cd data/
+[?2004l[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ s[Kls
+[?2004l[0m[01;31m1011.rgb.gz[0m  [01;31m1012.rgb.gz[0m  [01;31m1013.rgb.gz[0m  [01;31m1092.rgb.gz[0m  [01;31m1715.rgb.gz[0m
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ rm *
+[?2004l[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ rm *[2Plscd data/make build-canny [7Pcleanrm ./data/*.bmpls ./data/*.B.*.bmpG.*.bmpR.*.bmp[4Pbmp./bin/CannyStepVHP.exe ./data/1013.rgb.gz -t[29Prm ./data/*.bmpls[C[C[C[C[C[C[C[C[C[C[C[C[C./bin/CannyStepVHP.exe ./data/1013.rgb.gz -h[K[10Prm ./data/*.bmpls[C[C[C[C[C[C[C[C[C[C[C[C[C[7P*.bmp[Kmake allcleanls[Kcd course3_project/p -rf /home/dabajabaza/jianguoyun/Nutstore/CUDA_courses/course3_project/ .[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[4Pmv proo_of_run jianguoyun/Nutstore/CUDA_courses/course3_project/proof/ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cnano proo_of_run [Kscript proo_of_run[3Prm proo_of_run script proo_of_run[4Prm[C[C[C[C[C[C[C[C[C[C[C[C[4@script[C[C[C[C[C[C[C[C[C[C[C[C[8Pmake cleanrm ./data/CannyStepVHP.exe cd ..[Kls 1099*[K./CannyStepVHP.exe 1099.rgb.gz -n 15 -s 9.0 -l 16 -u 48 -c 96 -t[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Crm *.bmp[Kls[Kfor f in *.rgb.gz; do echo "---------"; ./CannyStepVHP.exe $f -n 11 -s 5.0 -c 64 -l 8 -u 24; done[A(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ ./CannyStepVHP.exe  -h[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cls[Kcp /home/dabajabaza/jianguoyun/Nutstore/CUDA_courses/course3/ass5_independent_project/data/*.gz  .[A(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ ls[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd datap ./bin/CannyStepVHP.exe ./data/[16Pmake build-canny [6Pclean[C[6Pcd ..[1Prm *cd data./bin/CannyStepVHP.exe ./data/1012.rgb.gz-h[Kmake all[Kls[Kcp -rf  /home/dabajabaza/jianguoyun/Nutstore/CUDA_courses/course3_project/*  .[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Crm -rf *[Kls[Kcd course3_project//DATA[Kmake clean[5Pcd ..[3Plsrm *[2Plsrm *.bmpls[Kfor f in *.rgb.gz; do echo "---------"; ./CannyStepVHP.exe $f -n 11 -s 5.0 -c 64 -l 8 -u 24; done[A(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ ls[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd data/DATA/course3_project/[K./CannyStepVHP.exe -hls[Kcd datap ./bin/CannyStepVHP.exe ./data/[16Pmake build-canny [7Pclean[5Pcd ..[3Plscd datamake all[3Pcd ..[3Plscp /home/dabajabaza/jianguoyun/Nutstore/CUDA_courses/course3/ass5_independent_project/data/*.gz .[A(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ rm *[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[2Plsrm *cp /home/dabajabaza/jianguoyun/Nutstore/CUDA_courses/course3/ass5_independent_project/data/*.gz .
+[?2004l[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ ls
+[?2004l[0m[01;31m1011.rgb.gz[0m  [01;31m1020.rgb.gz[0m  [01;31m1029.rgb.gz[0m  [01;31m1038.rgb.gz[0m  [01;31m1047.rgb.gz[0m  [01;31m1056.rgb.gz[0m  [01;31m1065.rgb.gz[0m  [01;31m1074.rgb.gz[0m  [01;31m1083.rgb.gz[0m  [01;31m1092.rgb.gz[0m
+[01;31m1012.rgb.gz[0m  [01;31m1021.rgb.gz[0m  [01;31m1030.rgb.gz[0m  [01;31m1039.rgb.gz[0m  [01;31m1048.rgb.gz[0m  [01;31m1057.rgb.gz[0m  [01;31m1066.rgb.gz[0m  [01;31m1075.rgb.gz[0m  [01;31m1084.rgb.gz[0m  [01;31m1093.rgb.gz[0m
+[01;31m1013.rgb.gz[0m  [01;31m1022.rgb.gz[0m  [01;31m1031.rgb.gz[0m  [01;31m1040.rgb.gz[0m  [01;31m1049.rgb.gz[0m  [01;31m1058.rgb.gz[0m  [01;31m1067.rgb.gz[0m  [01;31m1076.rgb.gz[0m  [01;31m1085.rgb.gz[0m  [01;31m1094.rgb.gz[0m
+[01;31m1014.rgb.gz[0m  [01;31m1023.rgb.gz[0m  [01;31m1032.rgb.gz[0m  [01;31m1041.rgb.gz[0m  [01;31m1050.rgb.gz[0m  [01;31m1059.rgb.gz[0m  [01;31m1068.rgb.gz[0m  [01;31m1077.rgb.gz[0m  [01;31m1086.rgb.gz[0m  [01;31m1095.rgb.gz[0m
+[01;31m1015.rgb.gz[0m  [01;31m1024.rgb.gz[0m  [01;31m1033.rgb.gz[0m  [01;31m1042.rgb.gz[0m  [01;31m1051.rgb.gz[0m  [01;31m1060.rgb.gz[0m  [01;31m1069.rgb.gz[0m  [01;31m1078.rgb.gz[0m  [01;31m1087.rgb.gz[0m  [01;31m1096.rgb.gz[0m
+[01;31m1016.rgb.gz[0m  [01;31m1025.rgb.gz[0m  [01;31m1034.rgb.gz[0m  [01;31m1043.rgb.gz[0m  [01;31m1052.rgb.gz[0m  [01;31m1061.rgb.gz[0m  [01;31m1070.rgb.gz[0m  [01;31m1079.rgb.gz[0m  [01;31m1088.rgb.gz[0m  [01;31m1097.rgb.gz[0m
+[01;31m1017.rgb.gz[0m  [01;31m1026.rgb.gz[0m  [01;31m1035.rgb.gz[0m  [01;31m1044.rgb.gz[0m  [01;31m1053.rgb.gz[0m  [01;31m1062.rgb.gz[0m  [01;31m1071.rgb.gz[0m  [01;31m1080.rgb.gz[0m  [01;31m1089.rgb.gz[0m  [01;31m1098.rgb.gz[0m
+[01;31m1018.rgb.gz[0m  [01;31m1027.rgb.gz[0m  [01;31m1036.rgb.gz[0m  [01;31m1045.rgb.gz[0m  [01;31m1054.rgb.gz[0m  [01;31m1063.rgb.gz[0m  [01;31m1072.rgb.gz[0m  [01;31m1081.rgb.gz[0m  [01;31m1090.rgb.gz[0m  [01;31m1099.rgb.gz[0m
+[01;31m1019.rgb.gz[0m  [01;31m1028.rgb.gz[0m  [01;31m1037.rgb.gz[0m  [01;31m1046.rgb.gz[0m  [01;31m1055.rgb.gz[0m  [01;31m1064.rgb.gz[0m  [01;31m1073.rgb.gz[0m  [01;31m1082.rgb.gz[0m  [01;31m1091.rgb.gz[0m
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ ../bin/CannyStepVHP.exe -h
+[?2004lUsage: ../bin/CannyStepVHP.exe <rgb.gz input file> [options]
+options: 
+-t // in step mode
+-c <rescaling cutoff>
+-l <double threshold lower bound>
+-u <double threshold upper bound>
+-s <initial gaussian filter sigma>
+-n <initial gaussian filter size>
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ ../bin/CannyStepVHP.exe -h[K[K[K../bin/CannyStepVHP.exe ls[Kcp /home/dabajabaza/jianguoyun/Nutstore/CUDA_courses/course3/ass5_independent_project/data/*.gz .[A(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ rm *[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[2Plscd data/make build-canny [7Pcleanrm ./data/*.bmpls ./data/*.B.*.bmpG.*.bmpR.*.bmp[4Pbmp./bin/CannyStepVHP.exe ./data/1013.rgb.gz -t[29Prm ./data/*.bmpls[C[C[C[C[C[C[C[C[C[C[C[C[C./bin/CannyStepVHP.exe ./data/1013.rgb.gz -h[K[10Prm ./data/*.bmpls[C[C[C[C[C[C[C[C[C[C[C[C[C[7P*.bmp[Kmake allcleanls[Kcd course3_project/p -rf /home/dabajabaza/jianguoyun/Nutstore/CUDA_courses/course3_project/ .[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[4Pmv proo_of_run jianguoyun/Nutstore/CUDA_courses/course3_project/proof/ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cnano proo_of_run [Kscript proo_of_run[3Prm proo_of_run script proo_of_run[4Prm[C[C[C[C[C[C[C[C[C[C[C[C[4@script[C[C[C[C[C[C[C[C[C[C[C[C[8Pmake cleanrm ./data/CannyStepVHP.exe cd ..[Kls 1099*[K./CannyStepVHP.exe 1099.rgb.gz -n 15 -s 9.0 -l 16 -u 48 -c 96 -t[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Crm *.bmp[Kls[Kfor f in *.rgb.gz; do echo "---------"; ./CannyStepVHP.exe $f -n 11 -s 5.0 -c 64 -l 8 -u 24; done[A(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ ./CannyStepVHP.exe  -h[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cls[Kcp /home/dabajabaza/jianguoyun/Nutstore/CUDA_courses/course3/ass5_independent_project/data/*.gz  .[A(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ ls[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd datap ./bin/CannyStepVHP.exe ./data/d data[Kls[Kcp /home/dabajabaza/jianguoyun/Nutstore/CUDA_courses/course3/ass5_independent_project/data/*.gz  .[A(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ ls[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C./CannyStepVHP.exe  -hfor f in *.rgb.gz; do echo "---------"; ./CannyStepVHP.exe $f -n 11 -s 5.0 -c 64 -l 8 -u 24; done[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C./CannyStepVHP.exe $f -n 11 -s 5.0 -c 64 -l 8 -u 24; done[A(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C./CannyStepVHP.exe $f -n 11 -s 5.0 -c 64 -l 8 -u 24; done[A(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C/./CannyStepVHP.exe $f -n 11 -s 5.0 -c 64 -l 8 -u 2[1@4[A(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cb./CannyStepVHP.exe $f -n 11 -s 5.0 -c 64 -l 8 -u [1@2[A(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ci./CannyStepVHP.exe $f -n 11 -s 5.0 -c 64 -l 8 -u[1@ [A(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cn./CannyStepVHP.exe $f -n 11 -s 5.0 -c 64 -l 8 -[1@u[A(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C/CannyStepVHP.exe $f -n 11 -s 5.0 -c 64 -l 8 -u[1P[A(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+[C[C[C[C[C[C[C[C[C[C
+[?2004l---------
+
+CannyStepVHP() started with file 1011.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1011.rgb.gz
+    Timing : RGB_VHP::_load()  : 305 milliseconds
+    Timing : total  : 1193 milliseconds
+---------
+
+CannyStepVHP() started with file 1012.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1012.rgb.gz
+    Timing : RGB_VHP::_load()  : 306 milliseconds
+    Timing : total  : 1111 milliseconds
+---------
+
+CannyStepVHP() started with file 1013.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1013.rgb.gz
+    Timing : RGB_VHP::_load()  : 305 milliseconds
+    Timing : total  : 1118 milliseconds
+---------
+
+CannyStepVHP() started with file 1014.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1014.rgb.gz
+    Timing : RGB_VHP::_load()  : 308 milliseconds
+    Timing : total  : 1090 milliseconds
+---------
+
+CannyStepVHP() started with file 1015.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1015.rgb.gz
+    Timing : RGB_VHP::_load()  : 308 milliseconds
+    Timing : total  : 1115 milliseconds
+---------
+
+CannyStepVHP() started with file 1016.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1016.rgb.gz
+    Timing : RGB_VHP::_load()  : 312 milliseconds
+    Timing : total  : 1105 milliseconds
+---------
+
+CannyStepVHP() started with file 1017.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1017.rgb.gz
+    Timing : RGB_VHP::_load()  : 308 milliseconds
+    Timing : total  : 1092 milliseconds
+---------
+
+CannyStepVHP() started with file 1018.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1018.rgb.gz
+    Timing : RGB_VHP::_load()  : 305 milliseconds
+    Timing : total  : 1102 milliseconds
+---------
+
+CannyStepVHP() started with file 1019.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1019.rgb.gz
+    Timing : RGB_VHP::_load()  : 297 milliseconds
+    Timing : total  : 1111 milliseconds
+---------
+
+CannyStepVHP() started with file 1020.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1020.rgb.gz
+    Timing : RGB_VHP::_load()  : 308 milliseconds
+    Timing : total  : 1102 milliseconds
+---------
+
+CannyStepVHP() started with file 1021.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1021.rgb.gz
+    Timing : RGB_VHP::_load()  : 305 milliseconds
+    Timing : total  : 1098 milliseconds
+---------
+
+CannyStepVHP() started with file 1022.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1022.rgb.gz
+    Timing : RGB_VHP::_load()  : 307 milliseconds
+    Timing : total  : 1126 milliseconds
+---------
+
+CannyStepVHP() started with file 1023.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1023.rgb.gz
+    Timing : RGB_VHP::_load()  : 306 milliseconds
+    Timing : total  : 1108 milliseconds
+---------
+
+CannyStepVHP() started with file 1024.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1024.rgb.gz
+    Timing : RGB_VHP::_load()  : 309 milliseconds
+    Timing : total  : 1095 milliseconds
+---------
+
+CannyStepVHP() started with file 1025.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1025.rgb.gz
+    Timing : RGB_VHP::_load()  : 308 milliseconds
+    Timing : total  : 1091 milliseconds
+---------
+
+CannyStepVHP() started with file 1026.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1026.rgb.gz
+    Timing : RGB_VHP::_load()  : 308 milliseconds
+    Timing : total  : 1087 milliseconds
+---------
+
+CannyStepVHP() started with file 1027.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1027.rgb.gz
+    Timing : RGB_VHP::_load()  : 299 milliseconds
+    Timing : total  : 1086 milliseconds
+---------
+
+CannyStepVHP() started with file 1028.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1028.rgb.gz
+    Timing : RGB_VHP::_load()  : 314 milliseconds
+    Timing : total  : 1102 milliseconds
+---------
+
+CannyStepVHP() started with file 1029.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1029.rgb.gz
+    Timing : RGB_VHP::_load()  : 293 milliseconds
+    Timing : total  : 1098 milliseconds
+---------
+
+CannyStepVHP() started with file 1030.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1030.rgb.gz
+    Timing : RGB_VHP::_load()  : 309 milliseconds
+    Timing : total  : 1090 milliseconds
+---------
+
+CannyStepVHP() started with file 1031.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1031.rgb.gz
+    Timing : RGB_VHP::_load()  : 295 milliseconds
+    Timing : total  : 1095 milliseconds
+---------
+
+CannyStepVHP() started with file 1032.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1032.rgb.gz
+    Timing : RGB_VHP::_load()  : 296 milliseconds
+    Timing : total  : 1102 milliseconds
+---------
+
+CannyStepVHP() started with file 1033.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1033.rgb.gz
+    Timing : RGB_VHP::_load()  : 293 milliseconds
+    Timing : total  : 1106 milliseconds
+---------
+
+CannyStepVHP() started with file 1034.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1034.rgb.gz
+    Timing : RGB_VHP::_load()  : 299 milliseconds
+    Timing : total  : 1082 milliseconds
+---------
+
+CannyStepVHP() started with file 1035.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1035.rgb.gz
+    Timing : RGB_VHP::_load()  : 303 milliseconds
+    Timing : total  : 1091 milliseconds
+---------
+
+CannyStepVHP() started with file 1036.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1036.rgb.gz
+    Timing : RGB_VHP::_load()  : 306 milliseconds
+    Timing : total  : 1088 milliseconds
+---------
+
+CannyStepVHP() started with file 1037.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1037.rgb.gz
+    Timing : RGB_VHP::_load()  : 299 milliseconds
+    Timing : total  : 1073 milliseconds
+---------
+
+CannyStepVHP() started with file 1038.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1038.rgb.gz
+    Timing : RGB_VHP::_load()  : 300 milliseconds
+    Timing : total  : 1077 milliseconds
+---------
+
+CannyStepVHP() started with file 1039.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1039.rgb.gz
+    Timing : RGB_VHP::_load()  : 299 milliseconds
+    Timing : total  : 1083 milliseconds
+---------
+
+CannyStepVHP() started with file 1040.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1040.rgb.gz
+    Timing : RGB_VHP::_load()  : 305 milliseconds
+    Timing : total  : 1088 milliseconds
+---------
+
+CannyStepVHP() started with file 1041.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1041.rgb.gz
+    Timing : RGB_VHP::_load()  : 309 milliseconds
+    Timing : total  : 1122 milliseconds
+---------
+
+CannyStepVHP() started with file 1042.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1042.rgb.gz
+    Timing : RGB_VHP::_load()  : 310 milliseconds
+    Timing : total  : 1116 milliseconds
+---------
+
+CannyStepVHP() started with file 1043.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1043.rgb.gz
+    Timing : RGB_VHP::_load()  : 307 milliseconds
+    Timing : total  : 1100 milliseconds
+---------
+
+CannyStepVHP() started with file 1044.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1044.rgb.gz
+    Timing : RGB_VHP::_load()  : 309 milliseconds
+    Timing : total  : 1088 milliseconds
+---------
+
+CannyStepVHP() started with file 1045.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1045.rgb.gz
+    Timing : RGB_VHP::_load()  : 308 milliseconds
+    Timing : total  : 1103 milliseconds
+---------
+
+CannyStepVHP() started with file 1046.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1046.rgb.gz
+    Timing : RGB_VHP::_load()  : 309 milliseconds
+    Timing : total  : 1121 milliseconds
+---------
+
+CannyStepVHP() started with file 1047.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1047.rgb.gz
+    Timing : RGB_VHP::_load()  : 318 milliseconds
+    Timing : total  : 1162 milliseconds
+---------
+
+CannyStepVHP() started with file 1048.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1048.rgb.gz
+    Timing : RGB_VHP::_load()  : 313 milliseconds
+    Timing : total  : 1107 milliseconds
+---------
+
+CannyStepVHP() started with file 1049.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1049.rgb.gz
+    Timing : RGB_VHP::_load()  : 316 milliseconds
+    Timing : total  : 1107 milliseconds
+---------
+
+CannyStepVHP() started with file 1050.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1050.rgb.gz
+    Timing : RGB_VHP::_load()  : 328 milliseconds
+    Timing : total  : 1136 milliseconds
+---------
+
+CannyStepVHP() started with file 1051.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1051.rgb.gz
+    Timing : RGB_VHP::_load()  : 320 milliseconds
+    Timing : total  : 1132 milliseconds
+---------
+
+CannyStepVHP() started with file 1052.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1052.rgb.gz
+    Timing : RGB_VHP::_load()  : 310 milliseconds
+    Timing : total  : 1126 milliseconds
+---------
+
+CannyStepVHP() started with file 1053.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1053.rgb.gz
+    Timing : RGB_VHP::_load()  : 311 milliseconds
+    Timing : total  : 1100 milliseconds
+---------
+
+CannyStepVHP() started with file 1054.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1054.rgb.gz
+    Timing : RGB_VHP::_load()  : 313 milliseconds
+    Timing : total  : 1112 milliseconds
+---------
+
+CannyStepVHP() started with file 1055.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1055.rgb.gz
+    Timing : RGB_VHP::_load()  : 328 milliseconds
+    Timing : total  : 1153 milliseconds
+---------
+
+CannyStepVHP() started with file 1056.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1056.rgb.gz
+    Timing : RGB_VHP::_load()  : 326 milliseconds
+    Timing : total  : 1146 milliseconds
+---------
+
+CannyStepVHP() started with file 1057.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1057.rgb.gz
+    Timing : RGB_VHP::_load()  : 325 milliseconds
+    Timing : total  : 1170 milliseconds
+---------
+
+CannyStepVHP() started with file 1058.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1058.rgb.gz
+    Timing : RGB_VHP::_load()  : 319 milliseconds
+    Timing : total  : 1143 milliseconds
+---------
+
+CannyStepVHP() started with file 1059.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1059.rgb.gz
+    Timing : RGB_VHP::_load()  : 317 milliseconds
+    Timing : total  : 1105 milliseconds
+---------
+
+CannyStepVHP() started with file 1060.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1060.rgb.gz
+    Timing : RGB_VHP::_load()  : 320 milliseconds
+    Timing : total  : 1135 milliseconds
+---------
+
+CannyStepVHP() started with file 1061.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1061.rgb.gz
+    Timing : RGB_VHP::_load()  : 322 milliseconds
+    Timing : total  : 1132 milliseconds
+---------
+
+CannyStepVHP() started with file 1062.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1062.rgb.gz
+    Timing : RGB_VHP::_load()  : 326 milliseconds
+    Timing : total  : 1120 milliseconds
+---------
+
+CannyStepVHP() started with file 1063.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1063.rgb.gz
+    Timing : RGB_VHP::_load()  : 323 milliseconds
+    Timing : total  : 1114 milliseconds
+---------
+
+CannyStepVHP() started with file 1064.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1064.rgb.gz
+    Timing : RGB_VHP::_load()  : 325 milliseconds
+    Timing : total  : 1147 milliseconds
+---------
+
+CannyStepVHP() started with file 1065.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1065.rgb.gz
+    Timing : RGB_VHP::_load()  : 325 milliseconds
+    Timing : total  : 1152 milliseconds
+---------
+
+CannyStepVHP() started with file 1066.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1066.rgb.gz
+    Timing : RGB_VHP::_load()  : 329 milliseconds
+    Timing : total  : 1129 milliseconds
+---------
+
+CannyStepVHP() started with file 1067.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1067.rgb.gz
+    Timing : RGB_VHP::_load()  : 328 milliseconds
+    Timing : total  : 1136 milliseconds
+---------
+
+CannyStepVHP() started with file 1068.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1068.rgb.gz
+    Timing : RGB_VHP::_load()  : 328 milliseconds
+    Timing : total  : 1143 milliseconds
+---------
+
+CannyStepVHP() started with file 1069.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1069.rgb.gz
+    Timing : RGB_VHP::_load()  : 331 milliseconds
+    Timing : total  : 1161 milliseconds
+---------
+
+CannyStepVHP() started with file 1070.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1070.rgb.gz
+    Timing : RGB_VHP::_load()  : 338 milliseconds
+    Timing : total  : 1137 milliseconds
+---------
+
+CannyStepVHP() started with file 1071.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1071.rgb.gz
+    Timing : RGB_VHP::_load()  : 294 milliseconds
+    Timing : total  : 1108 milliseconds
+---------
+
+CannyStepVHP() started with file 1072.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1072.rgb.gz
+    Timing : RGB_VHP::_load()  : 329 milliseconds
+    Timing : total  : 1133 milliseconds
+---------
+
+CannyStepVHP() started with file 1073.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1073.rgb.gz
+    Timing : RGB_VHP::_load()  : 335 milliseconds
+    Timing : total  : 1162 milliseconds
+---------
+
+CannyStepVHP() started with file 1074.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1074.rgb.gz
+    Timing : RGB_VHP::_load()  : 332 milliseconds
+    Timing : total  : 1129 milliseconds
+---------
+
+CannyStepVHP() started with file 1075.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1075.rgb.gz
+    Timing : RGB_VHP::_load()  : 329 milliseconds
+    Timing : total  : 1118 milliseconds
+---------
+
+CannyStepVHP() started with file 1076.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1076.rgb.gz
+    Timing : RGB_VHP::_load()  : 298 milliseconds
+    Timing : total  : 1108 milliseconds
+---------
+
+CannyStepVHP() started with file 1077.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1077.rgb.gz
+    Timing : RGB_VHP::_load()  : 298 milliseconds
+    Timing : total  : 1111 milliseconds
+---------
+
+CannyStepVHP() started with file 1078.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1078.rgb.gz
+    Timing : RGB_VHP::_load()  : 293 milliseconds
+    Timing : total  : 1117 milliseconds
+---------
+
+CannyStepVHP() started with file 1079.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1079.rgb.gz
+    Timing : RGB_VHP::_load()  : 328 milliseconds
+    Timing : total  : 1121 milliseconds
+---------
+
+CannyStepVHP() started with file 1080.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1080.rgb.gz
+    Timing : RGB_VHP::_load()  : 333 milliseconds
+    Timing : total  : 1142 milliseconds
+---------
+
+CannyStepVHP() started with file 1081.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1081.rgb.gz
+    Timing : RGB_VHP::_load()  : 336 milliseconds
+    Timing : total  : 1128 milliseconds
+---------
+
+CannyStepVHP() started with file 1082.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1082.rgb.gz
+    Timing : RGB_VHP::_load()  : 333 milliseconds
+    Timing : total  : 1132 milliseconds
+---------
+
+CannyStepVHP() started with file 1083.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1083.rgb.gz
+    Timing : RGB_VHP::_load()  : 332 milliseconds
+    Timing : total  : 1134 milliseconds
+---------
+
+CannyStepVHP() started with file 1084.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1084.rgb.gz
+    Timing : RGB_VHP::_load()  : 335 milliseconds
+    Timing : total  : 1127 milliseconds
+---------
+
+CannyStepVHP() started with file 1085.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1085.rgb.gz
+    Timing : RGB_VHP::_load()  : 292 milliseconds
+    Timing : total  : 1105 milliseconds
+---------
+
+CannyStepVHP() started with file 1086.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1086.rgb.gz
+    Timing : RGB_VHP::_load()  : 297 milliseconds
+    Timing : total  : 1112 milliseconds
+---------
+
+CannyStepVHP() started with file 1087.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1087.rgb.gz
+    Timing : RGB_VHP::_load()  : 296 milliseconds
+    Timing : total  : 1129 milliseconds
+---------
+
+CannyStepVHP() started with file 1088.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1088.rgb.gz
+    Timing : RGB_VHP::_load()  : 296 milliseconds
+    Timing : total  : 1091 milliseconds
+---------
+
+CannyStepVHP() started with file 1089.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1089.rgb.gz
+    Timing : RGB_VHP::_load()  : 303 milliseconds
+    Timing : total  : 1129 milliseconds
+---------
+
+CannyStepVHP() started with file 1090.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1090.rgb.gz
+    Timing : RGB_VHP::_load()  : 300 milliseconds
+    Timing : total  : 1098 milliseconds
+---------
+
+CannyStepVHP() started with file 1091.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1091.rgb.gz
+    Timing : RGB_VHP::_load()  : 301 milliseconds
+    Timing : total  : 1095 milliseconds
+---------
+
+CannyStepVHP() started with file 1092.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1092.rgb.gz
+    Timing : RGB_VHP::_load()  : 299 milliseconds
+    Timing : total  : 1092 milliseconds
+---------
+
+CannyStepVHP() started with file 1093.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1093.rgb.gz
+    Timing : RGB_VHP::_load()  : 292 milliseconds
+    Timing : total  : 1092 milliseconds
+---------
+
+CannyStepVHP() started with file 1094.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1094.rgb.gz
+    Timing : RGB_VHP::_load()  : 299 milliseconds
+    Timing : total  : 1102 milliseconds
+---------
+
+CannyStepVHP() started with file 1095.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1095.rgb.gz
+    Timing : RGB_VHP::_load()  : 292 milliseconds
+    Timing : total  : 1127 milliseconds
+---------
+
+CannyStepVHP() started with file 1096.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1096.rgb.gz
+    Timing : RGB_VHP::_load()  : 290 milliseconds
+    Timing : total  : 1089 milliseconds
+---------
+
+CannyStepVHP() started with file 1097.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1097.rgb.gz
+    Timing : RGB_VHP::_load()  : 302 milliseconds
+    Timing : total  : 1151 milliseconds
+---------
+
+CannyStepVHP() started with file 1098.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1098.rgb.gz
+    Timing : RGB_VHP::_load()  : 304 milliseconds
+    Timing : total  : 1099 milliseconds
+---------
+
+CannyStepVHP() started with file 1099.rgb.gz
+    Gaussian filter size = 11 , sigma = 5
+    Rescaling cutoff = 64
+    Double threshold lower cut = 8 higher cut = 24
+
+    Processing 1099.rgb.gz
+    Timing : RGB_VHP::_load()  : 294 milliseconds
+    Timing : total  : 1089 milliseconds
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ ls
+[?2004l[0m[01;31m1011.rgb.gz[0m            [01;31m1026.rgb.gz[0m            [01;31m1041.rgb.gz[0m            [01;31m1056.rgb.gz[0m            [01;31m1071.rgb.gz[0m            [01;31m1086.rgb.gz[0m
+[01;35m1011.rgb.gz.bmp[0m        [01;35m1026.rgb.gz.bmp[0m        [01;35m1041.rgb.gz.bmp[0m        [01;35m1056.rgb.gz.bmp[0m        [01;35m1071.rgb.gz.bmp[0m        [01;35m1086.rgb.gz.bmp[0m
+[01;35m1011.rgb.gz.canny.bmp[0m  [01;35m1026.rgb.gz.canny.bmp[0m  [01;35m1041.rgb.gz.canny.bmp[0m  [01;35m1056.rgb.gz.canny.bmp[0m  [01;35m1071.rgb.gz.canny.bmp[0m  [01;35m1086.rgb.gz.canny.bmp[0m
+[01;31m1012.rgb.gz[0m            [01;31m1027.rgb.gz[0m            [01;31m1042.rgb.gz[0m            [01;31m1057.rgb.gz[0m            [01;31m1072.rgb.gz[0m            [01;31m1087.rgb.gz[0m
+[01;35m1012.rgb.gz.bmp[0m        [01;35m1027.rgb.gz.bmp[0m        [01;35m1042.rgb.gz.bmp[0m        [01;35m1057.rgb.gz.bmp[0m        [01;35m1072.rgb.gz.bmp[0m        [01;35m1087.rgb.gz.bmp[0m
+[01;35m1012.rgb.gz.canny.bmp[0m  [01;35m1027.rgb.gz.canny.bmp[0m  [01;35m1042.rgb.gz.canny.bmp[0m  [01;35m1057.rgb.gz.canny.bmp[0m  [01;35m1072.rgb.gz.canny.bmp[0m  [01;35m1087.rgb.gz.canny.bmp[0m
+[01;31m1013.rgb.gz[0m            [01;31m1028.rgb.gz[0m            [01;31m1043.rgb.gz[0m            [01;31m1058.rgb.gz[0m            [01;31m1073.rgb.gz[0m            [01;31m1088.rgb.gz[0m
+[01;35m1013.rgb.gz.bmp[0m        [01;35m1028.rgb.gz.bmp[0m        [01;35m1043.rgb.gz.bmp[0m        [01;35m1058.rgb.gz.bmp[0m        [01;35m1073.rgb.gz.bmp[0m        [01;35m1088.rgb.gz.bmp[0m
+[01;35m1013.rgb.gz.canny.bmp[0m  [01;35m1028.rgb.gz.canny.bmp[0m  [01;35m1043.rgb.gz.canny.bmp[0m  [01;35m1058.rgb.gz.canny.bmp[0m  [01;35m1073.rgb.gz.canny.bmp[0m  [01;35m1088.rgb.gz.canny.bmp[0m
+[01;31m1014.rgb.gz[0m            [01;31m1029.rgb.gz[0m            [01;31m1044.rgb.gz[0m            [01;31m1059.rgb.gz[0m            [01;31m1074.rgb.gz[0m            [01;31m1089.rgb.gz[0m
+[01;35m1014.rgb.gz.bmp[0m        [01;35m1029.rgb.gz.bmp[0m        [01;35m1044.rgb.gz.bmp[0m        [01;35m1059.rgb.gz.bmp[0m        [01;35m1074.rgb.gz.bmp[0m        [01;35m1089.rgb.gz.bmp[0m
+[01;35m1014.rgb.gz.canny.bmp[0m  [01;35m1029.rgb.gz.canny.bmp[0m  [01;35m1044.rgb.gz.canny.bmp[0m  [01;35m1059.rgb.gz.canny.bmp[0m  [01;35m1074.rgb.gz.canny.bmp[0m  [01;35m1089.rgb.gz.canny.bmp[0m
+[01;31m1015.rgb.gz[0m            [01;31m1030.rgb.gz[0m            [01;31m1045.rgb.gz[0m            [01;31m1060.rgb.gz[0m            [01;31m1075.rgb.gz[0m            [01;31m1090.rgb.gz[0m
+[01;35m1015.rgb.gz.bmp[0m        [01;35m1030.rgb.gz.bmp[0m        [01;35m1045.rgb.gz.bmp[0m        [01;35m1060.rgb.gz.bmp[0m        [01;35m1075.rgb.gz.bmp[0m        [01;35m1090.rgb.gz.bmp[0m
+[01;35m1015.rgb.gz.canny.bmp[0m  [01;35m1030.rgb.gz.canny.bmp[0m  [01;35m1045.rgb.gz.canny.bmp[0m  [01;35m1060.rgb.gz.canny.bmp[0m  [01;35m1075.rgb.gz.canny.bmp[0m  [01;35m1090.rgb.gz.canny.bmp[0m
+[01;31m1016.rgb.gz[0m            [01;31m1031.rgb.gz[0m            [01;31m1046.rgb.gz[0m            [01;31m1061.rgb.gz[0m            [01;31m1076.rgb.gz[0m            [01;31m1091.rgb.gz[0m
+[01;35m1016.rgb.gz.bmp[0m        [01;35m1031.rgb.gz.bmp[0m        [01;35m1046.rgb.gz.bmp[0m        [01;35m1061.rgb.gz.bmp[0m        [01;35m1076.rgb.gz.bmp[0m        [01;35m1091.rgb.gz.bmp[0m
+[01;35m1016.rgb.gz.canny.bmp[0m  [01;35m1031.rgb.gz.canny.bmp[0m  [01;35m1046.rgb.gz.canny.bmp[0m  [01;35m1061.rgb.gz.canny.bmp[0m  [01;35m1076.rgb.gz.canny.bmp[0m  [01;35m1091.rgb.gz.canny.bmp[0m
+[01;31m1017.rgb.gz[0m            [01;31m1032.rgb.gz[0m            [01;31m1047.rgb.gz[0m            [01;31m1062.rgb.gz[0m            [01;31m1077.rgb.gz[0m            [01;31m1092.rgb.gz[0m
+[01;35m1017.rgb.gz.bmp[0m        [01;35m1032.rgb.gz.bmp[0m        [01;35m1047.rgb.gz.bmp[0m        [01;35m1062.rgb.gz.bmp[0m        [01;35m1077.rgb.gz.bmp[0m        [01;35m1092.rgb.gz.bmp[0m
+[01;35m1017.rgb.gz.canny.bmp[0m  [01;35m1032.rgb.gz.canny.bmp[0m  [01;35m1047.rgb.gz.canny.bmp[0m  [01;35m1062.rgb.gz.canny.bmp[0m  [01;35m1077.rgb.gz.canny.bmp[0m  [01;35m1092.rgb.gz.canny.bmp[0m
+[01;31m1018.rgb.gz[0m            [01;31m1033.rgb.gz[0m            [01;31m1048.rgb.gz[0m            [01;31m1063.rgb.gz[0m            [01;31m1078.rgb.gz[0m            [01;31m1093.rgb.gz[0m
+[01;35m1018.rgb.gz.bmp[0m        [01;35m1033.rgb.gz.bmp[0m        [01;35m1048.rgb.gz.bmp[0m        [01;35m1063.rgb.gz.bmp[0m        [01;35m1078.rgb.gz.bmp[0m        [01;35m1093.rgb.gz.bmp[0m
+[01;35m1018.rgb.gz.canny.bmp[0m  [01;35m1033.rgb.gz.canny.bmp[0m  [01;35m1048.rgb.gz.canny.bmp[0m  [01;35m1063.rgb.gz.canny.bmp[0m  [01;35m1078.rgb.gz.canny.bmp[0m  [01;35m1093.rgb.gz.canny.bmp[0m
+[01;31m1019.rgb.gz[0m            [01;31m1034.rgb.gz[0m            [01;31m1049.rgb.gz[0m            [01;31m1064.rgb.gz[0m            [01;31m1079.rgb.gz[0m            [01;31m1094.rgb.gz[0m
+[01;35m1019.rgb.gz.bmp[0m        [01;35m1034.rgb.gz.bmp[0m        [01;35m1049.rgb.gz.bmp[0m        [01;35m1064.rgb.gz.bmp[0m        [01;35m1079.rgb.gz.bmp[0m        [01;35m1094.rgb.gz.bmp[0m
+[01;35m1019.rgb.gz.canny.bmp[0m  [01;35m1034.rgb.gz.canny.bmp[0m  [01;35m1049.rgb.gz.canny.bmp[0m  [01;35m1064.rgb.gz.canny.bmp[0m  [01;35m1079.rgb.gz.canny.bmp[0m  [01;35m1094.rgb.gz.canny.bmp[0m
+[01;31m1020.rgb.gz[0m            [01;31m1035.rgb.gz[0m            [01;31m1050.rgb.gz[0m            [01;31m1065.rgb.gz[0m            [01;31m1080.rgb.gz[0m            [01;31m1095.rgb.gz[0m
+[01;35m1020.rgb.gz.bmp[0m        [01;35m1035.rgb.gz.bmp[0m        [01;35m1050.rgb.gz.bmp[0m        [01;35m1065.rgb.gz.bmp[0m        [01;35m1080.rgb.gz.bmp[0m        [01;35m1095.rgb.gz.bmp[0m
+[01;35m1020.rgb.gz.canny.bmp[0m  [01;35m1035.rgb.gz.canny.bmp[0m  [01;35m1050.rgb.gz.canny.bmp[0m  [01;35m1065.rgb.gz.canny.bmp[0m  [01;35m1080.rgb.gz.canny.bmp[0m  [01;35m1095.rgb.gz.canny.bmp[0m
+[01;31m1021.rgb.gz[0m            [01;31m1036.rgb.gz[0m            [01;31m1051.rgb.gz[0m            [01;31m1066.rgb.gz[0m            [01;31m1081.rgb.gz[0m            [01;31m1096.rgb.gz[0m
+[01;35m1021.rgb.gz.bmp[0m        [01;35m1036.rgb.gz.bmp[0m        [01;35m1051.rgb.gz.bmp[0m        [01;35m1066.rgb.gz.bmp[0m        [01;35m1081.rgb.gz.bmp[0m        [01;35m1096.rgb.gz.bmp[0m
+[01;35m1021.rgb.gz.canny.bmp[0m  [01;35m1036.rgb.gz.canny.bmp[0m  [01;35m1051.rgb.gz.canny.bmp[0m  [01;35m1066.rgb.gz.canny.bmp[0m  [01;35m1081.rgb.gz.canny.bmp[0m  [01;35m1096.rgb.gz.canny.bmp[0m
+[01;31m1022.rgb.gz[0m            [01;31m1037.rgb.gz[0m            [01;31m1052.rgb.gz[0m            [01;31m1067.rgb.gz[0m            [01;31m1082.rgb.gz[0m            [01;31m1097.rgb.gz[0m
+[01;35m1022.rgb.gz.bmp[0m        [01;35m1037.rgb.gz.bmp[0m        [01;35m1052.rgb.gz.bmp[0m        [01;35m1067.rgb.gz.bmp[0m        [01;35m1082.rgb.gz.bmp[0m        [01;35m1097.rgb.gz.bmp[0m
+[01;35m1022.rgb.gz.canny.bmp[0m  [01;35m1037.rgb.gz.canny.bmp[0m  [01;35m1052.rgb.gz.canny.bmp[0m  [01;35m1067.rgb.gz.canny.bmp[0m  [01;35m1082.rgb.gz.canny.bmp[0m  [01;35m1097.rgb.gz.canny.bmp[0m
+[01;31m1023.rgb.gz[0m            [01;31m1038.rgb.gz[0m            [01;31m1053.rgb.gz[0m            [01;31m1068.rgb.gz[0m            [01;31m1083.rgb.gz[0m            [01;31m1098.rgb.gz[0m
+[01;35m1023.rgb.gz.bmp[0m        [01;35m1038.rgb.gz.bmp[0m        [01;35m1053.rgb.gz.bmp[0m        [01;35m1068.rgb.gz.bmp[0m        [01;35m1083.rgb.gz.bmp[0m        [01;35m1098.rgb.gz.bmp[0m
+[01;35m1023.rgb.gz.canny.bmp[0m  [01;35m1038.rgb.gz.canny.bmp[0m  [01;35m1053.rgb.gz.canny.bmp[0m  [01;35m1068.rgb.gz.canny.bmp[0m  [01;35m1083.rgb.gz.canny.bmp[0m  [01;35m1098.rgb.gz.canny.bmp[0m
+[01;31m1024.rgb.gz[0m            [01;31m1039.rgb.gz[0m            [01;31m1054.rgb.gz[0m            [01;31m1069.rgb.gz[0m            [01;31m1084.rgb.gz[0m            [01;31m1099.rgb.gz[0m
+[01;35m1024.rgb.gz.bmp[0m        [01;35m1039.rgb.gz.bmp[0m        [01;35m1054.rgb.gz.bmp[0m        [01;35m1069.rgb.gz.bmp[0m        [01;35m1084.rgb.gz.bmp[0m        [01;35m1099.rgb.gz.bmp[0m
+[01;35m1024.rgb.gz.canny.bmp[0m  [01;35m1039.rgb.gz.canny.bmp[0m  [01;35m1054.rgb.gz.canny.bmp[0m  [01;35m1069.rgb.gz.canny.bmp[0m  [01;35m1084.rgb.gz.canny.bmp[0m  [01;35m1099.rgb.gz.canny.bmp[0m
+[01;31m1025.rgb.gz[0m            [01;31m1040.rgb.gz[0m            [01;31m1055.rgb.gz[0m            [01;31m1070.rgb.gz[0m            [01;31m1085.rgb.gz[0m
+[01;35m1025.rgb.gz.bmp[0m        [01;35m1040.rgb.gz.bmp[0m        [01;35m1055.rgb.gz.bmp[0m        [01;35m1070.rgb.gz.bmp[0m        [01;35m1085.rgb.gz.bmp[0m
+[01;35m1025.rgb.gz.canny.bmp[0m  [01;35m1040.rgb.gz.canny.bmp[0m  [01;35m1055.rgb.gz.canny.bmp[0m  [01;35m1070.rgb.gz.canny.bmp[0m  [01;35m1085.rgb.gz.canny.bmp[0m
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ ls *.canny.bmp
+[?2004l[0m[01;35m1011.rgb.gz.canny.bmp[0m  [01;35m1026.rgb.gz.canny.bmp[0m  [01;35m1041.rgb.gz.canny.bmp[0m  [01;35m1056.rgb.gz.canny.bmp[0m  [01;35m1071.rgb.gz.canny.bmp[0m  [01;35m1086.rgb.gz.canny.bmp[0m
+[01;35m1012.rgb.gz.canny.bmp[0m  [01;35m1027.rgb.gz.canny.bmp[0m  [01;35m1042.rgb.gz.canny.bmp[0m  [01;35m1057.rgb.gz.canny.bmp[0m  [01;35m1072.rgb.gz.canny.bmp[0m  [01;35m1087.rgb.gz.canny.bmp[0m
+[01;35m1013.rgb.gz.canny.bmp[0m  [01;35m1028.rgb.gz.canny.bmp[0m  [01;35m1043.rgb.gz.canny.bmp[0m  [01;35m1058.rgb.gz.canny.bmp[0m  [01;35m1073.rgb.gz.canny.bmp[0m  [01;35m1088.rgb.gz.canny.bmp[0m
+[01;35m1014.rgb.gz.canny.bmp[0m  [01;35m1029.rgb.gz.canny.bmp[0m  [01;35m1044.rgb.gz.canny.bmp[0m  [01;35m1059.rgb.gz.canny.bmp[0m  [01;35m1074.rgb.gz.canny.bmp[0m  [01;35m1089.rgb.gz.canny.bmp[0m
+[01;35m1015.rgb.gz.canny.bmp[0m  [01;35m1030.rgb.gz.canny.bmp[0m  [01;35m1045.rgb.gz.canny.bmp[0m  [01;35m1060.rgb.gz.canny.bmp[0m  [01;35m1075.rgb.gz.canny.bmp[0m  [01;35m1090.rgb.gz.canny.bmp[0m
+[01;35m1016.rgb.gz.canny.bmp[0m  [01;35m1031.rgb.gz.canny.bmp[0m  [01;35m1046.rgb.gz.canny.bmp[0m  [01;35m1061.rgb.gz.canny.bmp[0m  [01;35m1076.rgb.gz.canny.bmp[0m  [01;35m1091.rgb.gz.canny.bmp[0m
+[01;35m1017.rgb.gz.canny.bmp[0m  [01;35m1032.rgb.gz.canny.bmp[0m  [01;35m1047.rgb.gz.canny.bmp[0m  [01;35m1062.rgb.gz.canny.bmp[0m  [01;35m1077.rgb.gz.canny.bmp[0m  [01;35m1092.rgb.gz.canny.bmp[0m
+[01;35m1018.rgb.gz.canny.bmp[0m  [01;35m1033.rgb.gz.canny.bmp[0m  [01;35m1048.rgb.gz.canny.bmp[0m  [01;35m1063.rgb.gz.canny.bmp[0m  [01;35m1078.rgb.gz.canny.bmp[0m  [01;35m1093.rgb.gz.canny.bmp[0m
+[01;35m1019.rgb.gz.canny.bmp[0m  [01;35m1034.rgb.gz.canny.bmp[0m  [01;35m1049.rgb.gz.canny.bmp[0m  [01;35m1064.rgb.gz.canny.bmp[0m  [01;35m1079.rgb.gz.canny.bmp[0m  [01;35m1094.rgb.gz.canny.bmp[0m
+[01;35m1020.rgb.gz.canny.bmp[0m  [01;35m1035.rgb.gz.canny.bmp[0m  [01;35m1050.rgb.gz.canny.bmp[0m  [01;35m1065.rgb.gz.canny.bmp[0m  [01;35m1080.rgb.gz.canny.bmp[0m  [01;35m1095.rgb.gz.canny.bmp[0m
+[01;35m1021.rgb.gz.canny.bmp[0m  [01;35m1036.rgb.gz.canny.bmp[0m  [01;35m1051.rgb.gz.canny.bmp[0m  [01;35m1066.rgb.gz.canny.bmp[0m  [01;35m1081.rgb.gz.canny.bmp[0m  [01;35m1096.rgb.gz.canny.bmp[0m
+[01;35m1022.rgb.gz.canny.bmp[0m  [01;35m1037.rgb.gz.canny.bmp[0m  [01;35m1052.rgb.gz.canny.bmp[0m  [01;35m1067.rgb.gz.canny.bmp[0m  [01;35m1082.rgb.gz.canny.bmp[0m  [01;35m1097.rgb.gz.canny.bmp[0m
+[01;35m1023.rgb.gz.canny.bmp[0m  [01;35m1038.rgb.gz.canny.bmp[0m  [01;35m1053.rgb.gz.canny.bmp[0m  [01;35m1068.rgb.gz.canny.bmp[0m  [01;35m1083.rgb.gz.canny.bmp[0m  [01;35m1098.rgb.gz.canny.bmp[0m
+[01;35m1024.rgb.gz.canny.bmp[0m  [01;35m1039.rgb.gz.canny.bmp[0m  [01;35m1054.rgb.gz.canny.bmp[0m  [01;35m1069.rgb.gz.canny.bmp[0m  [01;35m1084.rgb.gz.canny.bmp[0m  [01;35m1099.rgb.gz.canny.bmp[0m
+[01;35m1025.rgb.gz.canny.bmp[0m  [01;35m1040.rgb.gz.canny.bmp[0m  [01;35m1055.rgb.gz.canny.bmp[0m  [01;35m1070.rgb.gz.canny.bmp[0m  [01;35m1085.rgb.gz.canny.bmp[0m
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project/data[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project/data[00m$ cd ..
+[?2004l[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ make clean
+[?2004lrm -rf  ./bin/*.exe  *.bmp   *.fltr   *.txt   /tmp/*.o   ./data/*.bmp   ./data/*.xy   ./data/*.txt
+[?2004h(base) ]0;dabajabaza@XXXX: /DATA/course3_project[01;32mdabajabaza@XXXX[00m:[01;34m/DATA/course3_project[00m$ [?2004l
+exit
+
+Script done on 2022-07-11 10:52:59+08:00 [COMMAND_EXIT_CODE="0"]

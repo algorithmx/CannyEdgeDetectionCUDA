@@ -168,7 +168,7 @@ Here is another example.
 
 (base) XXX@XXX:~/PROJECT_ROOT_FOLDER$ cd ..
 
-(base) dabajabaza@XXXX:~/jianguoyun/Nutstore/CUDA_courses/course3_project$ ./bin/CannyStepVHP.exe ./data/1092.rgb.gz -n 17 -s 11.0 -l 4 -u 24 -c 64
+(base) XXX@XXX:~/PROJECT_ROOT_FOLDER$ ./bin/CannyStepVHP.exe ./data/1092.rgb.gz -n 17 -s 11.0 -l 4 -u 24 -c 64
 ```
 
 ![Male-fullbody-1092](./sample/1092.rgb.gz.bmp)
@@ -179,4 +179,6 @@ Here is another example.
 
 ## Proof of run
 
+I use the ubuntu tool **script** to record the command line, as a proof of run. [Here is a tutorial](https://www.howtogeek.com/devops/how-to-record-linux-terminal-commands-with-script/) for how to replay. 
 
+The session recording file is in the `./proof` folder.
