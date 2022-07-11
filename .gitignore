@@ -2,5 +2,5 @@
 *.exe
 *.txt
 *.fltr
-*.bmp
+./data/*.bmp
 .vscode
